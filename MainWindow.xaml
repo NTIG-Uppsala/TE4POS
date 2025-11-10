@@ -1,12 +1,56 @@
-﻿<Window x:Class="TE4POS.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TE4POS"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+﻿<Window
+  x:Class="TE4POS.MainWindow"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:local="clr-namespace:TE4POS"
+  mc:Ignorable="d"
+  Title="MainWindow"
+  Height="450"
+  Width="800"
+>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="50" />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+    <Border Grid.Column="0" Grid.Row="0" BorderThickness="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="25" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="25" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0">Kaffe</Label>
+                <Label Grid.Column="1">49 kr</Label>
+                <Button Grid.Column="2">-</Button>
+                <TextBox Grid.Column="3" TextAlignment="Center">0</TextBox>
+                <Button Grid.Column="4">+</Button>
+            </Grid>
+    </Border>
+        <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
 
-    </Grid>
+            <Label Grid.Row="0" Grid.Column="0">Summa:</Label>
+            <TextBox Grid.Row="0" Grid.Column="1"></TextBox>
+            <Label Grid.Row="0" Grid.Column="2">kr</Label>
+
+        </Grid>
+        <Button Grid.Row="1" Grid.Column="1" Background="Red" BorderThickness="2" BorderBrush="Black">Nollställ</Button>
+  </Grid>
 </Window>
