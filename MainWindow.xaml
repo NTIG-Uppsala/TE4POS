@@ -34,9 +34,9 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">Kaffe</Label>
                 <Label Grid.Column="1">49 kr</Label>
-                <Button Grid.Column="2">-</Button>
-                <TextBox Grid.Column="3" TextAlignment="Center">0</TextBox>
-                <Button Grid.Column="4">+</Button>
+                <Button Grid.Column="2" x:Name="Remove_Coffee" Click="Remove_Coffee_Click">-</Button>
+                <TextBox Grid.Column="3" TextAlignment="Center" x:Name="kaffenr">0</TextBox>
+                <Button Grid.Column="4" x:Name="Add_Coffee" Click="Add_Coffee_Click">+</Button>
             </Grid>
     </Border>
         <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" Margin="5">
@@ -45,12 +45,10 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-
             <Label Grid.Row="0" Grid.Column="0">Summa:</Label>
-            <TextBox Grid.Row="0" Grid.Column="1"></TextBox>
+            <TextBox Grid.Row="0" Grid.Column="1" x:Name="sum"></TextBox>
             <Label Grid.Row="0" Grid.Column="2">kr</Label>
-
         </Grid>
-        <Button Grid.Row="1" Grid.Column="1" Background="Red" BorderThickness="2" BorderBrush="Black">Nollställ</Button>
+        <Button Grid.Row="1" Grid.Column="1" Background="Red" BorderThickness="2" BorderBrush="Black" x:Name="Reset" Click="Reset_Click">Nollställ</Button>
   </Grid>
 </Window>
