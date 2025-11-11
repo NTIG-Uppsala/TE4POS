@@ -12,6 +12,6 @@
     <PackageReference Include="FlaUI.UIA3" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TestProject1\Tests.csproj" />
+    <ProjectReference Include="..\Tests\Tests.csproj" />
   </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TE4POS", "TE4POS.csproj", "{411BD276-2649-4F84-A565-410E37A0C169}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "..\TestProject1\Tests.csproj", "{4CB51B50-BFAC-49B1-82C6-7DA377064627}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "..\Tests\Tests.csproj", "{AEC1003A-F6D2-C24B-8EFF-80A817BE465D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{411BD276-2649-4F84-A565-410E37A0C169}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{411BD276-2649-4F84-A565-410E37A0C169}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{411BD276-2649-4F84-A565-410E37A0C169}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4CB51B50-BFAC-49B1-82C6-7DA377064627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4CB51B50-BFAC-49B1-82C6-7DA377064627}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4CB51B50-BFAC-49B1-82C6-7DA377064627}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4CB51B50-BFAC-49B1-82C6-7DA377064627}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEC1003A-F6D2-C24B-8EFF-80A817BE465D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEC1003A-F6D2-C24B-8EFF-80A817BE465D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEC1003A-F6D2-C24B-8EFF-80A817BE465D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEC1003A-F6D2-C24B-8EFF-80A817BE465D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
