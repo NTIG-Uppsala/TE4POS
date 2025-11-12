@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36623.8
+VisualStudioVersion = 17.14.36623.8 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TE4POS", "TE4POS.csproj", "{411BD276-2649-4F84-A565-410E37A0C169}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TE4POS", "TE4POS.csproj", "{3A0C7DD3-9345-A646-A9EE-EA4E588B3AB3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "..\Tests\Tests.csproj", "{AEC1003A-F6D2-C24B-8EFF-80A817BE465D}"
 EndProject
@@ -13,10 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{411BD276-2649-4F84-A565-410E37A0C169}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{411BD276-2649-4F84-A565-410E37A0C169}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{411BD276-2649-4F84-A565-410E37A0C169}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{411BD276-2649-4F84-A565-410E37A0C169}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A0C7DD3-9345-A646-A9EE-EA4E588B3AB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A0C7DD3-9345-A646-A9EE-EA4E588B3AB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A0C7DD3-9345-A646-A9EE-EA4E588B3AB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A0C7DD3-9345-A646-A9EE-EA4E588B3AB3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AEC1003A-F6D2-C24B-8EFF-80A817BE465D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AEC1003A-F6D2-C24B-8EFF-80A817BE465D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEC1003A-F6D2-C24B-8EFF-80A817BE465D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -26,6 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {9535CF49-1108-4D6A-8169-D9B211CCCAE2}
+		SolutionGuid = {63735C37-5304-41CB-AAE9-8982F7C8777F}
 	EndGlobalSection
 EndGlobal
