@@ -12,7 +12,7 @@ namespace TestFunctionailty
     public class Tests
     {
         // Change [USERNAME] to your actual Windows username before running the tests
-        private string appPath = "C:\\Users\\linus.elistewester\\source\\repos\\TE4POS\\bin\\Debug\\net9.0-windows\\TE4POS.exe";
+        private string appPath = "C:\\Users\\[USERNAME]\\source\\repos\\TE4POS\\bin\\Debug\\net9.0-windows\\TE4POS.exe";
         public required ConditionFactory cf;
         public required FlaUI.Core.Application app;
         public required Window window;
