@@ -63,11 +63,11 @@
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
                     <Label Grid.Row="0" Grid.Column="0">Total:</Label>
-                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="sum"></TextBox>
+                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="ShoppingCartTotal" IsReadOnly="True"></TextBox>
                     <Label Grid.Row="0" Grid.Column="2">kr</Label>
                 </Grid>
                 <Grid Grid.Row="0">
-                    <ItemsControl ItemsSource="{Binding ProductsInCart}">
+                    <ItemsControl ItemsSource="{Binding ShoppingCart}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -83,8 +83,8 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </Grid>
-                <Button Grid.Row="2" Grid.Column="0" Background="Red" x:Name="Reset">Nollställ</Button>
-                <Button Grid.Row="2" Grid.Column="1" Background="Green" x:Name="Finish">Sälj</Button>
+                <Button Grid.Row="2" Grid.Column="0" Background="Red" x:Name="Reset" Click="ResetCart_Click">Nollställ</Button>
+                <Button Grid.Row="2" Grid.Column="1" Background="Green" x:Name="Finish" Click="ResetCart_Click">Sälj</Button>
             </Grid>
         </Border>
   </Grid>
