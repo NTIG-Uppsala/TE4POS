@@ -25,32 +25,32 @@ namespace TE4POS
         {
             InitializeComponent();
 
-            // Create some example products
+            // Creates a list with all products
             AllProducts = new ObservableCollection<Product>
             {
-                new Product { Name = "Bryggkaffe (liten)", Price = 28, Category = "Varma drycker" },
-                new Product { Name = "Bryggkaffe (stor)", Price = 34, Category = "Varma drycker" },
-                new Product { Name = "Cappuccino", Price = 42, Category = "Varma drycker" },
-                new Product { Name = "Latte", Price = 46, Category = "Varma drycker" },
-                new Product { Name = "Varm choklad med grädde", Price = 45, Category = "Varma drycker" },
-                new Product { Name = "Te (svart, grönt eller örtte)", Price = 32, Category = "Varma drycker" },
-                new Product { Name = "Islatte", Price = 48, Category = "Kalla drycker" },
-                new Product { Name = "Ischai", Price = 46, Category = "Kalla drycker" },
-                new Product { Name = "Läsk (33 cl)", Price = 22, Category = "Kalla drycker" },
-                new Product { Name = "Mineralvatten", Price = 20, Category = "Kalla drycker" },
-                new Product { Name = "Smoothie (jordgubb & banan)", Price = 55, Category = "Kalla drycker" },
-                new Product { Name = "Färskpressad apelsinjuice", Price = 49, Category = "Kalla drycker" },
-                new Product { Name = "Kanelbulle", Price = 25, Category = "Bakverk" },
-                new Product { Name = "Chokladboll", Price = 18, Category = "Bakverk" },
-                new Product { Name = "Morotskaka (bit)", Price = 38, Category = "Bakverk" },
-                new Product { Name = "Cheesecake (bit)", Price = 42, Category = "Bakverk" },
-                new Product { Name = "Croissant", Price = 26, Category = "Bakverk" },
-                new Product { Name = "Muffins (blåbär)", Price = 28, Category = "Bakverk" },
-                new Product { Name = "Smörgås (ost & skinka)", Price = 38, Category = "Enkel mat" },
-                new Product { Name = "Räksmörgås", Price = 69, Category = "Enkel mat" },
-                new Product { Name = "Panini (kyckling & pesto)", Price = 58, Category = "Enkel mat" },
-                new Product { Name = "Soppa med bröd", Price = 65, Category = "Enkel mat" },
-                new Product { Name = "Quinoasallad", Price = 72, Category = "Enkel mat" },
+                new Product { Id = 1, Name = "Bryggkaffe (liten)", Price = 28, Category = "Varma drycker" },
+                new Product { Id = 2, Name = "Bryggkaffe (stor)", Price = 34, Category = "Varma drycker" },
+                new Product { Id = 3, Name = "Cappuccino", Price = 42, Category = "Varma drycker" },
+                new Product { Id = 4, Name = "Latte", Price = 46, Category = "Varma drycker" },
+                new Product { Id = 5,  Name = "Varm choklad med grädde", Price = 45, Category = "Varma drycker" },
+                new Product { Id = 6,  Name = "Te (svart, grönt eller örtte)", Price = 32, Category = "Varma drycker" },
+                new Product { Id = 7, Name = "Islatte", Price = 48, Category = "Kalla drycker" },
+                new Product { Id = 8, Name = "Ischai", Price = 46, Category = "Kalla drycker" },
+                new Product { Id = 9, Name = "Läsk (33 cl)", Price = 22, Category = "Kalla drycker" },
+                new Product { Id = 10, Name = "Mineralvatten", Price = 20, Category = "Kalla drycker" },
+                new Product { Id = 11, Name = "Smoothie (jordgubb & banan)", Price = 55, Category = "Kalla drycker" },
+                new Product { Id = 12, Name = "Färskpressad apelsinjuice", Price = 49, Category = "Kalla drycker" },
+                new Product { Id = 13, Name = "Kanelbulle", Price = 25, Category = "Bakverk" },
+                new Product { Id = 14, Name = "Chokladboll", Price = 18, Category = "Bakverk" },
+                new Product { Id = 15, Name = "Morotskaka (bit)", Price = 38, Category = "Bakverk" },
+                new Product { Id = 16, Name = "Cheesecake (bit)", Price = 42, Category = "Bakverk" },
+                new Product { Id = 17, Name = "Croissant", Price = 26, Category = "Bakverk" },
+                new Product { Id = 18, Name = "Muffins (blåbär)", Price = 28, Category = "Bakverk" },
+                new Product { Id = 19, Name = "Smörgås (ost & skinka)", Price = 38, Category = "Enkel mat" },
+                new Product { Id = 20, Name = "Räksmörgås", Price = 69, Category = "Enkel mat" },
+                new Product { Id = 21, Name = "Panini (kyckling & pesto)", Price = 58, Category = "Enkel mat" },
+                new Product { Id = 22, Name = "Soppa med bröd", Price = 65, Category = "Enkel mat" },
+                new Product { Id = 23, Name = "Quinoasallad", Price = 72, Category = "Enkel mat" },
             };
 
             // An empty cart
@@ -118,6 +118,7 @@ namespace TE4POS
 
     public class Product
     {
+        public int Id { get; set; }
         public string Name { get; set; } = "";
         public int Price { get; set; }
         public string Category { get; set; } = "";
