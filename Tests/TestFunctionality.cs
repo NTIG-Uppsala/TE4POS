@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using FlaUI.UIA3;
+﻿using FlaUI.UIA3;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Conditions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FlaUI.Core;
 
 namespace TestFunctionailty
@@ -26,7 +24,7 @@ namespace TestFunctionailty
         }
 
         [TestMethod]
-        public void AddThreeItem()
+        public void AddThreeItems()
         {
             var itemElement = window.FindFirstDescendant(cf.ByText("Bryggkaffe (liten)"));
             var tbElement = window.FindFirstDescendant(cf.ByAutomationId("ShoppingCartTotal"));
@@ -42,7 +40,7 @@ namespace TestFunctionailty
         }
 
         [TestMethod]
-        public void AddAndRemoveItem()
+        public void AddAndRemoveProduct()
         {
             var itemElement = window.FindFirstDescendant(cf.ByText("Mineralvatten"));
             var resetElement = window.FindFirstDescendant(cf.ByAutomationId("Reset"));
@@ -61,7 +59,7 @@ namespace TestFunctionailty
         }
 
         [TestMethod]
-        public void AddAndRemoveSomeItems()
+        public void AddAndRemoveMoreProducts()
         {
             var itemElement1 = window.FindFirstDescendant(cf.ByText("Panini (kyckling & pesto)"));
             var itemElement2 = window.FindFirstDescendant(cf.ByText("Cheesecake (bit)"));
@@ -80,6 +78,31 @@ namespace TestFunctionailty
             itemBtn1.Click();
 
             Assert.AreEqual("142", tb.Text);
+        }
+
+        [TestMethod]
+        public void CheckAmountReset()
+        {
+            var itemElement = window.FindFirstDescendant(cf.ByText("Panini (kyckling & pesto)"));
+            var resetElement = window.FindFirstDescendant(cf.ByAutomationId("Reset"));
+            var tbElement = window.FindFirstDescendant(cf.ByAutomationId("ShoppingCartTotal"));
+
+            var tb = tbElement.AsTextBox();
+            var itemBtn = itemElement.AsButton();
+            var resetBtn = resetElement.AsButton();
+
+            itemBtn.Click();
+            itemBtn.Click();
+            itemBtn.Click();
+            resetBtn.Click();
+            itemBtn.Click();
+
+            // Finds the amount element in the cart by its name, which is it's value 
+            var amountElement = window.FindFirstDescendant(cf.ByName("1"));
+            var amount = amountElement.Name;
+
+            Assert.AreEqual("1", amount);
+            Assert.AreEqual("58", tb.Text);
         }
 
         [TestCleanup]
