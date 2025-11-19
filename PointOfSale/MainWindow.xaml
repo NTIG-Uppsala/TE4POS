@@ -9,7 +9,6 @@
   Title="MainWindow"
   Height="600"
   Width="800"
-  Background="DarkBlue"
 >
     <Window.Resources>
         <Style TargetType="Button">
@@ -90,8 +89,8 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="50"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Foreground="White" FontSize="16" Text="{Binding Name}"/>
-                                <TextBlock Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 10 0" Foreground="White" FontSize="16" Text="{Binding Amount}"/>
+                                <TextBlock Grid.Column="0" FontSize="16" Text="{Binding Name}"/>
+                                <TextBlock Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 10 0" FontSize="16" Text="{Binding Amount}"/>
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -103,9 +102,9 @@
                         <ColumnDefinition Width="50"/>
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0" Foreground="White" FontSize="16">Total:</Label>
+                    <Label Grid.Row="0" Grid.Column="0" FontSize="16">Total:</Label>
                     <TextBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Padding="2" FontSize="13" x:Name="ShoppingCartTotal" IsReadOnly="True"></TextBox>
-                    <Label Grid.Row="0" Grid.Column="2" Foreground="White" FontSize="16">kr</Label>
+                    <Label Grid.Row="0" Grid.Column="2" FontSize="16">kr</Label>
                 </Grid>
 
                 <Grid Grid.Row="2">
