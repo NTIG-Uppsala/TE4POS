@@ -99,6 +99,9 @@ namespace TE4POS
         {
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
+            ReceiptWindow objReceiptWindow = new ReceiptWindow();
+            this.Visibility = Visibility.Hidden;
+            objReceiptWindow.Show();
         }
 
         private void WrapPanel_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
