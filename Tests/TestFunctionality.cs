@@ -8,7 +8,6 @@ using FlaUI.Core;
 namespace TestFunctionailty
 {
     [TestClass]
-    [DoNotParallelize]
     public class Tests
     {
         private string appPath = Path.GetFullPath(@"..\..\..\..\PointOfSale\bin\Debug\net9.0-windows\TE4POS.exe");
@@ -21,63 +20,66 @@ namespace TestFunctionailty
         {
             app = Application.Launch(appPath);
             var mainWindow = app.GetMainWindow(new UIA3Automation());
-            window = mainWindow;
+            window = (mainWindow != null) ? mainWindow : throw new Exception("mainWindow is not defined");
             cf = new ConditionFactory(new UIA3PropertyLibrary());
 
         }
 
         [TestMethod]
-        public void AddThreeCoffee()
+        public void AddThreeItem()
         {
-            var btnElement = window.FindFirstDescendant(cf.ByAutomationId("Add_Coffee"));
-            var tbElement = window.FindFirstDescendant(cf.ByAutomationId("sum"));
+            var itemElement = window.FindFirstDescendant(cf.ByText("Bryggkaffe (liten)"));
+            var tbElement = window.FindFirstDescendant(cf.ByAutomationId("ShoppingCartTotal"));
 
             var tb = tbElement.AsTextBox();
-            var btn = btnElement.AsButton();
+            var itemBtn  = itemElement.AsButton();
 
-            btn.Click();
-            btn.Click();
-            btn.Click();
+            itemBtn.Click();
+            itemBtn.Click();
+            itemBtn.Click();
 
-            Assert.AreEqual("147", tb.Text);
+            Assert.AreEqual("84", tb.Text);
         }
 
         [TestMethod]
-        public void AddAndRemoveCoffee()
+        public void AddAndRemoveItem()
         {
-            var removeBtnElement = window.FindFirstDescendant(cf.ByAutomationId("Remove_Coffee"));
-            var addBtnElement = window.FindFirstDescendant(cf.ByAutomationId("Add_Coffee"));
-            var tbElement = window.FindFirstDescendant(cf.ByAutomationId("sum"));
+            var itemElement = window.FindFirstDescendant(cf.ByText("Mineralvatten"));
+            var resetElement = window.FindFirstDescendant(cf.ByAutomationId("Reset"));
+            var tbElement = window.FindFirstDescendant(cf.ByAutomationId("ShoppingCartTotal"));
 
             var tb = tbElement.AsTextBox();
-            var addBtn = addBtnElement.AsButton();
-            var removeBtn = removeBtnElement.AsButton();
+            var itemBtn = itemElement.AsButton();
+            var resetBtn = resetElement.AsButton();
 
-            addBtn.Click();
-            removeBtn.Click();
+            itemBtn.Click();
+            itemBtn.Click();
+            resetBtn.Click();
+            itemBtn.Click();
 
-            Assert.AreEqual("0", tb.Text);
+            Assert.AreEqual("20", tb.Text);
         }
 
         [TestMethod]
-        public void AddAndRemoveManyCoffee()
+        public void AddAndRemoveSomeItems()
         {
-            var removeBtnElement = window.FindFirstDescendant(cf.ByAutomationId("Remove_Coffee"));
-            var addBtnElement = window.FindFirstDescendant(cf.ByAutomationId("Add_Coffee"));
-            var tbElement = window.FindFirstDescendant(cf.ByAutomationId("sum"));
+            var itemElement1 = window.FindFirstDescendant(cf.ByText("Panini (kyckling & pesto)"));
+            var itemElement2 = window.FindFirstDescendant(cf.ByText("Cheesecake (bit)"));
+            var resetElement = window.FindFirstDescendant(cf.ByAutomationId("Reset"));
+            var tbElement = window.FindFirstDescendant(cf.ByAutomationId("ShoppingCartTotal"));
 
             var tb = tbElement.AsTextBox();
-            var addBtn = addBtnElement.AsButton();
-            var removeBtn = removeBtnElement.AsButton();
+            var itemBtn1 = itemElement1.AsButton();
+            var itemBtn2 = itemElement2.AsButton();
+            var resetBtn = resetElement.AsButton();
 
-            addBtn.Click();
-            removeBtn.Click();
-            addBtn.Click();
-            addBtn.Click();
-            addBtn.Click();
-            removeBtn.Click();
+            itemBtn1.Click();
+            resetBtn.Click();
+            itemBtn2.Click();
+            itemBtn2.Click();
+            itemBtn1.Click();
 
-            Assert.AreEqual("98", tb.Text);
+            Assert.AreEqual("142", tb.Text);
         }
 
         [TestCleanup]
