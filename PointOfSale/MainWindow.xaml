@@ -9,69 +9,110 @@
   Title="MainWindow"
   Height="600"
   Width="800"
+  Background="DarkBlue"
 >
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="*"/>
-      <ColumnDefinition Width="*"/>
-      <ColumnDefinition Width="*"/>
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Category}" Value="Varma drycker">
+                    <Setter Property="Background" Value="Red"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Category}" Value="Kalla drycker">
+                    <Setter Property="Background" Value="Green"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Category}" Value="Bakverk">
+                    <Setter Property="Background" Value="Orange"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Category}" Value="Enkel mat">
+                    <Setter Property="Background" Value="Cyan"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-    <Border Grid.Column="0" BorderThickness="1">
-            <Grid>
-                <ItemsControl ItemsSource="{Binding AllProducts}">
+        <ScrollViewer HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+            <ItemsControl ItemsSource="{Binding AllProducts}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.Style>
+                                                        <Style>
+                                                        </Style>
+                                                    </ItemsControl.Style>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Click="AddAmount_Click" HorizontalContentAlignment="Stretch" x:Name="productButt" Width="200" Height="125">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" Text="{Binding Name}"/>
+                                <Grid Grid.Row="1" HorizontalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" HorizontalAlignment="Center" Margin="0, 0, 5, 0" Text="{Binding Price}"/>
+                                    <TextBlock Grid.Column="1" HorizontalAlignment="Center" Text="kr"/>
+                                </Grid>
+                            </Grid>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <ItemsControl Grid.Row="0" VerticalAlignment="Bottom" ItemsSource="{Binding ShoppingCart}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Button Click="AddAmount_Click" HorizontalContentAlignment="Stretch">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="50"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding Name}"/>
-                                <TextBlock Grid.Column="2" HorizontalAlignment="Right" Margin="0, 0, 5, 0" Text="{Binding Price}"/>
-                                <TextBlock Grid.Column="3" Text="kr"/>
-                                </Grid>
-                            </Button>
+                                <TextBlock Grid.Column="0" Foreground="White" FontSize="16" Text="{Binding Name}"/>
+                                <TextBlock Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 10 0" Foreground="White" FontSize="16" Text="{Binding Amount}"/>
+                            </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-            </Grid>
-    </Border>
-    <Border Grid.Column="1" BorderThickness="1">
-        
-    </Border>
-    <Border Grid.Column="2" BorderThickness="1">
-        <Grid Grid.Column="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+                
+                <Grid Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" Foreground="White" FontSize="16">Total:</Label>
+                    <TextBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Padding="2" FontSize="13" x:Name="ShoppingCartTotal" IsReadOnly="True"></TextBox>
+                    <Label Grid.Row="0" Grid.Column="2" Foreground="White" FontSize="16">kr</Label>
+                </Grid>
 
-                    <ItemsControl Grid.Row="0" ItemsSource="{Binding ShoppingCart}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="50"/>
-
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Name}"/>
-                                    <TextBlock Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 10 0" Text="{Binding Amount}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-            
-                <Grid Grid.Row="1">
+                <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="50"/>
@@ -80,21 +121,10 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom" Margin="5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="50"/>
-                            <ColumnDefinition Width="auto"/>
-                        </Grid.ColumnDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0">Total:</Label>
-                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="ShoppingCartTotal" IsReadOnly="True"></TextBox>
-                        <Label Grid.Row="0" Grid.Column="2">kr</Label>
-                    </Grid>
                     <Button Grid.Row="1" Grid.Column="0" Background="Red" x:Name="Reset" Click="ResetCart_Click">Nollställ</Button>
                     <Button Grid.Row="1" Grid.Column="1" Background="Green" x:Name="Finish" Click="Checkout_Click">Slutför</Button>
                 </Grid>
-
             </Grid>
-        </Border>
-  </Grid>
+        </Grid>
+    </Grid>
 </Window>
