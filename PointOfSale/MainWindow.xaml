@@ -7,8 +7,8 @@
   xmlns:local="clr-namespace:TE4POS"
   mc:Ignorable="d"
   Title="MainWindow"
-  Height="600"
-  Width="800"
+  Height="800"
+  Width="1300"
 >
     <Window.Resources>
         <Style TargetType="Button">

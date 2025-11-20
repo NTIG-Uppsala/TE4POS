@@ -42,7 +42,7 @@ namespace TestFunctionailty
         [TestMethod]
         public void AddAndRemoveProduct()
         {
-            var itemElement = window.FindFirstDescendant(cf.ByText("Mineralvatten"));
+            var itemElement = window.FindFirstDescendant(cf.ByText("Bryggkaffe (stor)"));
             var resetElement = window.FindFirstDescendant(cf.ByAutomationId("Reset"));
             var tbElement = window.FindFirstDescendant(cf.ByAutomationId("ShoppingCartTotal"));
 
@@ -55,14 +55,14 @@ namespace TestFunctionailty
             resetBtn.Click();
             itemBtn.Click();
 
-            Assert.AreEqual("20", tb.Text);
+            Assert.AreEqual("34", tb.Text);
         }
 
         [TestMethod]
         public void AddAndRemoveMoreProducts()
         {
-            var itemElement1 = window.FindFirstDescendant(cf.ByText("Panini (kyckling & pesto)"));
-            var itemElement2 = window.FindFirstDescendant(cf.ByText("Cheesecake (bit)"));
+            var itemElement1 = window.FindFirstDescendant(cf.ByText("Varm choklad med grädde"));
+            var itemElement2 = window.FindFirstDescendant(cf.ByText("Bryggkaffe (liten)"));
             var resetElement = window.FindFirstDescendant(cf.ByAutomationId("Reset"));
             var tbElement = window.FindFirstDescendant(cf.ByAutomationId("ShoppingCartTotal"));
 
@@ -77,13 +77,13 @@ namespace TestFunctionailty
             itemBtn2.Click();
             itemBtn1.Click();
 
-            Assert.AreEqual("142", tb.Text);
+            Assert.AreEqual("101", tb.Text);
         }
 
         [TestMethod]
         public void CheckAmountReset()
         {
-            var itemElement = window.FindFirstDescendant(cf.ByText("Panini (kyckling & pesto)"));
+            var itemElement = window.FindFirstDescendant(cf.ByText("Varm choklad med grädde"));
             var resetElement = window.FindFirstDescendant(cf.ByAutomationId("Reset"));
             var tbElement = window.FindFirstDescendant(cf.ByAutomationId("ShoppingCartTotal"));
 
@@ -102,7 +102,49 @@ namespace TestFunctionailty
             var amount = amountElement.Name;
 
             Assert.AreEqual("1", amount);
-            Assert.AreEqual("58", tb.Text);
+            Assert.AreEqual("45", tb.Text);
+        }
+
+        [TestMethod]
+        public void CheckReceiptButton()
+        {
+            var receiptElement = window.FindFirstDescendant(cf.ByAutomationId("ReceiptButton"));
+            var receiptBtn = receiptElement.AsButton();
+            receiptBtn.Click();
+
+            var backElement = window.FindFirstDescendant(cf.ByAutomationId("BackButton"));
+            var backBtn = backElement.AsButton();
+            backBtn.Click();
+        }
+
+        [TestMethod]
+        public void CheckIfReceiptIsMade()
+        {
+            var itemElement1 = window.FindFirstDescendant(cf.ByText("Cappuccino"));
+            var itemElement2 = window.FindFirstDescendant(cf.ByText("Latte"));
+            var checkoutElement = window.FindFirstDescendant(cf.ByAutomationId("Finish"));
+            var receiptElement = window.FindFirstDescendant(cf.ByAutomationId("ReceiptButton"));
+
+            var itemBtn1 = itemElement1.AsButton();
+            var itemBtn2 = itemElement2.AsButton();
+            var checkoutBtn = checkoutElement.AsButton();
+            var receiptBtn = receiptElement.AsButton();
+
+            itemBtn1.Click();
+            itemBtn1.Click();
+            itemBtn2.Click();
+
+            checkoutBtn.Click();
+            
+            
+            receiptBtn.Click();
+
+            var receiptItem1 = window.FindFirstDescendant(cf.ByText("Cappuccino"));
+            var receiptItem2 = window.FindFirstDescendant(cf.ByText("Latte"));
+
+            Assert.AreEqual("Cappuccino", receiptItem1.Name);
+            Assert.AreEqual("Latte", receiptItem2.Name);
+
         }
 
         [TestCleanup]
