@@ -13,6 +13,9 @@ namespace TE4POS
         // A list of all products added to the cart (also binds to the UI)
         public ObservableCollection<CartItem> ShoppingCart { get; set; }
 
+        // A list of receipts
+        public ObservableCollection<Receipt> AllReceipts { get; set; }
+
         public int ShoppingCartTotalPrice
         {
             get
@@ -23,6 +26,7 @@ namespace TE4POS
 
         public MainWindow()
         {
+            
             InitializeComponent();
 
             // Creates a list with all products
@@ -59,6 +63,7 @@ namespace TE4POS
             // Makes bindings look for properties inside this class
             DataContext = this;
 
+            AllReceipts = new ObservableCollection<Receipt>{};
         }
 
         private void AddAmount_Click(object sender, RoutedEventArgs e)
@@ -90,23 +95,34 @@ namespace TE4POS
         }
 
         private void ResetCart_Click(object sender, RoutedEventArgs e)
-        {
+        {   
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
         }
 
         private void Checkout_Click(object sender, RoutedEventArgs e)
         {
+            foreach(CartItem item in ShoppingCart)
+                {
+                    string receiptProductName = item.Name;
+                    int receiptProductPrice = item.Price;
+                    int receiptProductAmount = item.Amount;
+                    var receipt = new Receipt
+                    {
+                        receiptName = receiptProductName,
+                        receiptPrice = receiptProductPrice,
+                        receiptAmount = receiptProductAmount,
+                    };
+                    System.Diagnostics.Debug.WriteLine(receipt.receiptName);
+                    AllReceipts.Add(receipt);
+                    //System.Diagnostics.Debug.WriteLine(AllReceipts);
+                }
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
-            ReceiptWindow objReceiptWindow = new ReceiptWindow();
-            this.Visibility = Visibility.Hidden;
+            ReceiptWindow objReceiptWindow = new ReceiptWindow(AllReceipts);
+            this.Close();
             objReceiptWindow.Show();
-        }
-
-        private void WrapPanel_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
-        {
-
+            
         }
     }
 
@@ -138,5 +154,12 @@ namespace TE4POS
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+    }
+
+    public class Receipt
+    {
+        public string receiptName { get; set; } = "";
+        public int receiptPrice { get; set; }
+        public int receiptAmount { get; set; }
     }
 }

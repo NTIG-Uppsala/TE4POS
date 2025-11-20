@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TE4POS;
 
 namespace TE4POS
 {
@@ -19,15 +21,19 @@ namespace TE4POS
     /// </summary>
     public partial class ReceiptWindow : Window
     {
-        public ReceiptWindow()
+        public ObservableCollection<Receipt> ReceiptList;
+        public ReceiptWindow(ObservableCollection<Receipt> ReceiveReceipts)
         {
+            ReceiptList = ReceiveReceipts;
             InitializeComponent();
+            System.Diagnostics.Debug.WriteLine(ReceiptList);
         }
 
         private void MainWindow(object sender, RoutedEventArgs e)
         {
+            
             MainWindow objMainWindow = new MainWindow();
-            this.Visibility = Visibility.Hidden;
+            this.Close();
             objMainWindow.Show();
         }
     }
