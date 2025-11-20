@@ -81,7 +81,7 @@ namespace TestFunctionailty
         }
 
         [TestMethod]
-        public void CheckAmountReset()
+        public void ResetButton()
         {
             var itemElement = window.FindFirstDescendant(cf.ByText("Varm choklad med grädde"));
             var resetElement = window.FindFirstDescendant(cf.ByAutomationId("Reset"));
@@ -106,7 +106,7 @@ namespace TestFunctionailty
         }
 
         [TestMethod]
-        public void CheckReceiptButton()
+        public void ReceiptAndBackButton()
         {
             var receiptElement = window.FindFirstDescendant(cf.ByAutomationId("ReceiptButton"));
             var receiptBtn = receiptElement.AsButton();
@@ -118,7 +118,7 @@ namespace TestFunctionailty
         }
 
         [TestMethod]
-        public void CheckIfReceiptIsMade()
+        public void CreatingReceipt()
         {
             var itemElement1 = window.FindFirstDescendant(cf.ByText("Cappuccino"));
             var itemElement2 = window.FindFirstDescendant(cf.ByText("Latte"));
