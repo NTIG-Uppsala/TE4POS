@@ -1,18 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using TE4POS;
+
 
 namespace TE4POS
 {
@@ -21,15 +9,24 @@ namespace TE4POS
     /// </summary>
     public partial class ReceiptWindow : Window
     {
-        public ObservableCollection<Receipt> ReceiptList;
+        public ObservableCollection<Receipt> ReceiptList { get; set; }
         public ReceiptWindow(ObservableCollection<Receipt> ReceiveReceipts)
         {
-            ReceiptList = ReceiveReceipts;
+            
             InitializeComponent();
-            System.Diagnostics.Debug.WriteLine(ReceiptList);
+
+            ReceiptList = ReceiveReceipts;
+            foreach (var item in ReceiptList)
+            {
+                System.Diagnostics.Debug.WriteLine(item.receiptName);
+                System.Diagnostics.Debug.WriteLine(item.receiptPrice);
+                System.Diagnostics.Debug.WriteLine(item.receiptAmount);
+            }
+
+            DataContext = this;
         }
 
-        private void MainWindow(object sender, RoutedEventArgs e)
+        private void ToMainWindow(object sender, RoutedEventArgs e)
         {
             
             MainWindow objMainWindow = new MainWindow();

@@ -5,17 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TE4POS"
         mc:Ignorable="d"
-        Title="ReceiptWindow" Height="600" Width="800"> 
+        Title="ReceiptWindow" Height="600" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button Grid.Row="0" Grid.Column="0" Background="Aqua" Click="MainWindow">Tillbaka</Button>
-        <ItemsControl ItemsSource="{Binding ReceiptList}">
+        <Button Grid.Row="0" Grid.Column="0" Background="Aqua" Click="ToMainWindow">Tillbaka</Button>
+
+        <ItemsControl Grid.Column="1" x:Name="RecieptList" ItemsSource="{Binding ReceiptList}" Grid.ColumnSpan="2">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel/>
@@ -29,10 +32,10 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
+
                         <TextBlock Grid.Column="0" Text="{Binding receiptName}"/>
                         <TextBlock Grid.Column="1" Text="{Binding receiptPrice}"/>
                         <TextBlock Grid.Column="2" Text="{Binding receiptAmount}"/>
-                        
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
