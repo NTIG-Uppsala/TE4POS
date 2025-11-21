@@ -99,7 +99,7 @@ namespace TE4POS
         {
             var time = DateTime.Now;
             var currentReceipt = new Receipt { };
-            currentReceipt.time = time.ToString("yyyy-MM-dd HH:mm:ss");
+            currentReceipt.Time = time.ToString("yyyy-MM-dd HH:mm:ss");
 
             foreach (CartItem item in ShoppingCart)
             {
@@ -156,7 +156,7 @@ namespace TE4POS
 
     public class Receipt 
     {
-        public string time { get; set; }
+        public string Time { get; set; }
         public List<ReceiptProduct> ReceiptProducts { get; set; } = new List<ReceiptProduct>();
     }
 
