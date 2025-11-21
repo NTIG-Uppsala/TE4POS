@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows;
 
 
@@ -10,18 +11,12 @@ namespace TE4POS
     public partial class ReceiptWindow : Window
     {
         public ObservableCollection<Receipt> ReceiptList { get; set; }
-        public ReceiptWindow(ObservableCollection<Receipt> ReceiveReceipts)
+
+        public ReceiptWindow(ObservableCollection<Receipt> receiveReceipts)
         {
-            
             InitializeComponent();
 
-            ReceiptList = ReceiveReceipts;
-            foreach (var item in ReceiptList)
-            {
-                System.Diagnostics.Debug.WriteLine(item.receiptName);
-                System.Diagnostics.Debug.WriteLine(item.receiptPrice);
-                System.Diagnostics.Debug.WriteLine(item.receiptAmount);
-            }
+            ReceiptList = receiveReceipts;
 
             DataContext = this;
         }

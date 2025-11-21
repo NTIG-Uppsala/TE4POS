@@ -13,7 +13,7 @@ namespace TE4POS
         // A list of all products added to the cart (also binds to the UI)
         public ObservableCollection<CartItem> ShoppingCart { get; set; }
 
-        // A list of receipts
+        // A list of all receipts
         public ObservableCollection<Receipt> AllReceipts { get; set; }
 
         public int ShoppingCartTotalPrice
@@ -104,7 +104,8 @@ namespace TE4POS
         private void Checkout_Click(object sender, RoutedEventArgs e)
         {
             var time = DateTime.Now;
-            var Receipt = new Receipt { };
+            var currentReceipt = new Receipt { };
+            currentReceipt.time = time.ToString("yyyy-MM-dd HH:mm:ss");
 
             foreach (CartItem item in ShoppingCart)
             {
@@ -117,10 +118,9 @@ namespace TE4POS
                     receiptPrice = receiptProductPrice,
                     receiptAmount = receiptProductAmount,
                 };
-                Receipt.Add(receiptProduct);
+                currentReceipt.ReceiptProducts.Add(receiptProduct);
             }
-
-            AllReceipts.Add(Receipt);
+            AllReceipts.Add(currentReceipt);
 
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
@@ -162,8 +162,9 @@ namespace TE4POS
     }
 
     public class Receipt 
-    { 
-
+    {
+        public string time { get; set; }
+        public List<ReceiptProduct> ReceiptProducts { get; set; } = new List<ReceiptProduct>();
     }
 
     public class ReceiptProduct
