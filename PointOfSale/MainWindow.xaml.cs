@@ -13,9 +13,6 @@ namespace TE4POS
         // A list of all products added to the cart (also binds to the UI)
         public ObservableCollection<CartItem> ShoppingCart { get; set; }
 
-        // A list of all receipts
-        public ObservableCollection<Receipt> AllReceipts { get; set; }
-
         public int ShoppingCartTotalPrice
         {
             get
@@ -59,9 +56,6 @@ namespace TE4POS
 
             // An empty cart
             ShoppingCart = new ObservableCollection<CartItem>{};
-
-            // An empty receipt list
-            AllReceipts = new ObservableCollection<Receipt>{};
 
             // Makes bindings look for properties inside this class
             DataContext = this;
@@ -120,11 +114,11 @@ namespace TE4POS
                 };
                 currentReceipt.ReceiptProducts.Add(receiptProduct);
             }
-            AllReceipts.Add(currentReceipt);
+            ((App)Application.Current).AllReceipts.Add(currentReceipt);
 
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
-            ReceiptWindow objReceiptWindow = new ReceiptWindow(AllReceipts);
+            ReceiptWindow objReceiptWindow = new ReceiptWindow(((App)Application.Current).AllReceipts);
             this.Close();
             objReceiptWindow.Show();
             
@@ -140,7 +134,6 @@ namespace TE4POS
     }
     public class CartItem : Product, INotifyPropertyChanged
     {
-        // Backing field for Amount (needed for OnPropertyChanged)
         private int _amount;
 
         public int Amount

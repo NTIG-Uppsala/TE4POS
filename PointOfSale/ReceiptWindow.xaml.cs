@@ -16,7 +16,7 @@ namespace TE4POS
         {
             InitializeComponent();
 
-            ReceiptList = receiveReceipts;
+            ReceiptList = ((App)Application.Current).AllReceipts;
 
             DataContext = this;
         }
