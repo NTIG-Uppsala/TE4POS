@@ -96,16 +96,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
                 
-                <Grid Grid.Row="1" Grid.Column="0" VerticalAlignment="Bottom" Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0" FontSize="16">Total:</Label>
-                    <TextBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Padding="2" FontSize="13" x:Name="ShoppingCartTotal" IsReadOnly="True"></TextBox>
-                    <Label Grid.Row="0" Grid.Column="2" FontSize="16">kr</Label>
-                </Grid>
+                
 
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
@@ -116,6 +107,18 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom" Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" FontSize="16">Total:</Label>
+                    <TextBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Padding="2" FontSize="13" x:Name="ShoppingCartTotal" IsReadOnly="True"></TextBox>
+                    <Label Grid.Row="0" Grid.Column="2" FontSize="16">kr</Label>
+                    
+                </Grid>
+                    <Button Grid.Row="0" Grid.Column="1" Background="LightBlue" x:Name="Receipt" Click="ReceiptWindow_Click">Kvitton</Button>
                     <Button Grid.Row="1" Grid.Column="0" Background="Red" x:Name="Reset" Click="ResetCart_Click">Nollställ</Button>
                     <Button Grid.Row="1" Grid.Column="1" Background="Green" x:Name="Finish" Click="Checkout_Click">Slutför</Button>
                 </Grid>

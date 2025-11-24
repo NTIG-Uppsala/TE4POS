@@ -118,12 +118,16 @@ namespace TE4POS
 
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
+        }
+        private void ReceiptWindow_Click(object sender, RoutedEventArgs e)
+        {
             ReceiptWindow objReceiptWindow = new ReceiptWindow(((App)Application.Current).AllReceipts);
             this.Close();
             objReceiptWindow.Show();
-            
         }
     }
+
+    
 
     public class Product
     {
