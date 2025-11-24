@@ -123,7 +123,7 @@ namespace TE4POS
             }
             currentReceipt.articleCount = receiptArticleCount;
 
-                                    currentReceipt.receiptTotal = receiptTotalCost;
+            currentReceipt.receiptTotal = receiptTotalCost;
 
             currentReceiptNumber = ((App)Application.Current).totalReceiptNumber++;
             currentReceipt.receiptNumber = currentReceiptNumber;
@@ -148,6 +148,13 @@ namespace TE4POS
         public string Name { get; set; } = "";
         public int Price { get; set; }
         public string Category { get; set; } = "";
+        public string PriceFormatted
+        {
+            get
+            {
+                return String.Format("{0:F}", Price);
+            }
+        }
 
     }
     public class CartItem : Product, INotifyPropertyChanged
