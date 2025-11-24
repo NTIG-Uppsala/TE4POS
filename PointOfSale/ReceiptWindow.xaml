@@ -82,7 +82,7 @@
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="30"/>
+                                                    <ColumnDefinition Width="55"/>
                                                     <ColumnDefinition Width="50"/>
                                                 </Grid.ColumnDefinitions>
                                                 <WrapPanel Grid.Column="0">
@@ -96,14 +96,14 @@
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Grid.Column="0" Text="{Binding receiptAmount}"/>
                                                     <TextBlock Grid.Column="1" Text="x"/>
-                                                    <TextBlock Grid.Column="2" Text="{Binding receiptPrice}"/>
+                                                    <TextBlock Grid.Column="2" Text="{Binding receiptPriceFormatted}"/>
                                                 </Grid>
                                                 <Grid Grid.Column="2">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock Grid.Column="1" Text="{Binding receiptProductTotal}"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding receiptProductTotalFormatted}"/>
                                                 </Grid>
                                             </Grid>
                                         </DataTemplate>
@@ -122,7 +122,7 @@
                                     <TextBlock Grid.Row="0" Text="Antal art."/>
                                     <TextBlock Grid.Row="0" HorizontalAlignment="Right" Text="{Binding articleCount}"/>
                                     <TextBlock Grid.Row="1" Text="TOT:"/>
-                                    <TextBlock Grid.Row="1" HorizontalAlignment="Right" Text="{Binding receiptTotal}"/>
+                                    <TextBlock Grid.Row="1" HorizontalAlignment="Right" Text="{Binding receiptTotalFormatted}"/>
                                     <TextBlock Grid.Row="2" Text="KORT"/>
                                 </Grid>
 
@@ -145,7 +145,7 @@
                                     <TextBlock Grid.Column="2" Grid.Row="0" Text="Netto"/>
                                     <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding saleTax}"/>
                                     <TextBlock Grid.Column="3" Grid.Row="0" Text="Brutto"/>
-                                    <TextBlock Grid.Column="3" Grid.Row="1" Text="{Binding receiptTotal}"/>
+                                    <TextBlock Grid.Column="3" Grid.Row="1" Text="{Binding receiptTotalFormatted}"/>
                                 </Grid>
                                 
                             </Grid>

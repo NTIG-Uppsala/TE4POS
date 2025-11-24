@@ -170,8 +170,8 @@ namespace TE4POS
     public class Product
     {
         public string Name { get; set; } = "";
-        public int Price { get; set; }
         public string Category { get; set; } = "";
+        public int Price { get; set; }
         public string PriceFormatted
         {
             get
@@ -209,17 +209,38 @@ namespace TE4POS
         public int receiptNumber { get; set; }
         public int articleCount { get; set; }
         public int receiptTotal { get; set; }
+        public string receiptTotalFormatted
+        {
+            get
+            {
+                return String.Format("{0:F}", receiptTotal);
+            }
+        }
         public double subtotal { get; set; }
         public double saleTax { get; set; }
-
         public List<ReceiptProduct> ReceiptProducts { get; set; } = new List<ReceiptProduct>();
     }
 
     public class ReceiptProduct
     {
         public string receiptName { get; set; } = "";
-        public int receiptPrice { get; set; }
         public int receiptAmount { get; set; }
+        public int receiptPrice { get; set; }
+        public string receiptPriceFormatted
+        {
+            get
+            {
+                return String.Format("{0:F}", receiptPrice);
+            }
+        }
         public int receiptProductTotal { get; set; }
+        public string receiptProductTotalFormatted
+        {
+            get
+            {
+                return String.Format("{0:F}", receiptProductTotal);
+            }
+        }
+
     }
 }
