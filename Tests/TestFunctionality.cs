@@ -12,6 +12,7 @@ namespace TestFunctionailty
         public required ConditionFactory cf;
         public required FlaUI.Core.Application app;
         public required Window window;
+        public required IList<Window> allWindows;
 
         [TestInitialize]
         public void Setup()
@@ -19,6 +20,7 @@ namespace TestFunctionailty
             app = Application.Launch(appPath);
             var mainWindow = app.GetMainWindow(new UIA3Automation());
             window = (mainWindow != null) ? mainWindow : throw new Exception("mainWindow is not defined");
+            allWindows = app.GetAllTopLevelWindows(new UIA3Automation());
             cf = new ConditionFactory(new UIA3PropertyLibrary());
 
         }
@@ -108,13 +110,28 @@ namespace TestFunctionailty
         [TestMethod]
         public void ReceiptAndBackButton()
         {
-            var receiptElement = window.FindFirstDescendant(cf.ByAutomationId("ReceiptButton"));
+            var receiptElement = window.FindFirstDescendant(cf.ByAutomationId("Receipt"));
             var receiptBtn = receiptElement.AsButton();
             receiptBtn.Click();
 
-            var backElement = window.FindFirstDescendant(cf.ByAutomationId("BackButton"));
+            // Gets the opened receipt window
+            var receiptWindow = app.GetMainWindow(new UIA3Automation());
+
+            var backElement = receiptWindow.FindFirstDescendant(cf.ByAutomationId("BackButton"));
             var backBtn = backElement.AsButton();
             backBtn.Click();
+
+            // Gets the new instance of the main window
+            window = app.GetMainWindow(new UIA3Automation());
+
+            var itemElement1 = window.FindFirstDescendant(cf.ByText("Cappuccino"));
+            var itemBtn1 = itemElement1.AsButton();
+            itemBtn1.Click();
+
+            var tbElement = window.FindFirstDescendant(cf.ByAutomationId("ShoppingCartTotal"));
+            var tb = tbElement.AsTextBox();
+            Assert.AreEqual("42", tb.Text);
+
         }
 
         [TestMethod]
@@ -123,7 +140,7 @@ namespace TestFunctionailty
             var itemElement1 = window.FindFirstDescendant(cf.ByText("Cappuccino"));
             var itemElement2 = window.FindFirstDescendant(cf.ByText("Latte"));
             var checkoutElement = window.FindFirstDescendant(cf.ByAutomationId("Finish"));
-            var receiptElement = window.FindFirstDescendant(cf.ByAutomationId("ReceiptButton"));
+            var receiptElement = window.FindFirstDescendant(cf.ByAutomationId("Receipt"));
 
             var itemBtn1 = itemElement1.AsButton();
             var itemBtn2 = itemElement2.AsButton();
@@ -135,15 +152,21 @@ namespace TestFunctionailty
             itemBtn2.Click();
 
             checkoutBtn.Click();
-            
+
             
             receiptBtn.Click();
 
-            var receiptItem1 = window.FindFirstDescendant(cf.ByText("Cappuccino"));
-            var receiptItem2 = window.FindFirstDescendant(cf.ByText("Latte"));
+            // Gets the opened receipt window
+            var receiptWindow = app.GetMainWindow(new UIA3Automation());
 
-            Assert.AreEqual("Cappuccino", receiptItem1.Name);
-            Assert.AreEqual("Latte", receiptItem2.Name);
+            var receiptItem1 = receiptWindow.FindFirstDescendant(cf.ByText("Cappuccino"));
+            var receiptItem2 = receiptWindow.FindFirstDescendant(cf.ByText("Latte"));
+
+            var receiptItem1AsText = receiptItem1.AsTextBox();
+            var receiptItem2AsText = receiptItem2.AsTextBox();
+
+            Assert.AreEqual("Cappuccino", receiptItem1AsText.Name);
+            Assert.AreEqual("Latte", receiptItem2AsText.Name);
 
         }
 

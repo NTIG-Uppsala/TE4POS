@@ -15,7 +15,7 @@
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button Grid.Row="0" Grid.Column="0" Background="Aqua" Click="ToMainWindow">Tillbaka</Button>
+        <Button Grid.Row="0" Grid.Column="0" Background="Aqua" x:Name="BackButton" Click="ToMainWindow">Tillbaka</Button>
 
         <WrapPanel Grid.Column="1" Grid.RowSpan="2" Orientation="Horizontal">
             <ItemsControl  x:Name="RecieptList" ItemsSource="{Binding ReceiptList}">

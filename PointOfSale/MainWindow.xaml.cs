@@ -152,7 +152,7 @@ namespace TE4POS
             // Adds the receipt to the receipt list
             ((App)Application.Current).AllReceipts.Add(currentReceipt);
 
-            //Clears cart and cart price total for next order
+            // Clears cart and cart price total for next order
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
         }
