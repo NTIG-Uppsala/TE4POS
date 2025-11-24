@@ -100,20 +100,34 @@ namespace TE4POS
             var time = DateTime.Now;
             var currentReceipt = new Receipt { };
             currentReceipt.Time = time.ToString("yyyy-MM-dd HH:mm:ss");
+            int receiptArticleCount = 0;
+            int receiptTotalCost = 0;
+            int currentReceiptNumber = 0;
 
             foreach (CartItem item in ShoppingCart)
             {
                 string receiptProductName = item.Name;
                 int receiptProductPrice = item.Price;
                 int receiptProductAmount = item.Amount;
+                int totalProductAmountPrice = receiptProductPrice * receiptProductAmount;
                 var receiptProduct = new ReceiptProduct
                 {
                     receiptName = receiptProductName,
                     receiptPrice = receiptProductPrice,
                     receiptAmount = receiptProductAmount,
+                    receiptProductTotal = totalProductAmountPrice,
                 };
                 currentReceipt.ReceiptProducts.Add(receiptProduct);
+                receiptArticleCount += receiptProductAmount;
+                receiptTotalCost += totalProductAmountPrice;
             }
+            currentReceipt.articleCount = receiptArticleCount;
+
+                                    currentReceipt.receiptTotal = receiptTotalCost;
+
+            currentReceiptNumber = ((App)Application.Current).totalReceiptNumber++;
+            currentReceipt.receiptNumber = currentReceiptNumber;
+
             ((App)Application.Current).AllReceipts.Add(currentReceipt);
 
             ShoppingCart.Clear();
@@ -160,7 +174,10 @@ namespace TE4POS
 
     public class Receipt 
     {
-        public string Time { get; set; }
+        public string Time { get; set; } = "";
+        public int receiptNumber { get; set; }
+        public int articleCount { get; set; }
+        public int receiptTotal { get; set; }
         public List<ReceiptProduct> ReceiptProducts { get; set; } = new List<ReceiptProduct>();
     }
 
@@ -169,5 +186,6 @@ namespace TE4POS
         public string receiptName { get; set; } = "";
         public int receiptPrice { get; set; }
         public int receiptAmount { get; set; }
+        public int receiptProductTotal { get; set; }
     }
 }
