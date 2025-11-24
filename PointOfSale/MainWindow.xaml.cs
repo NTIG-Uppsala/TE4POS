@@ -13,6 +13,7 @@ namespace TE4POS
         // A list of all products added to the cart (also binds to the UI)
         public ObservableCollection<CartItem> ShoppingCart { get; set; }
 
+        public double VAT = 1.12;
         public int ShoppingCartTotalPrice
         {
             get
@@ -143,6 +144,11 @@ namespace TE4POS
             currentReceiptNumber = ((App)Application.Current).totalReceiptNumber++;
             currentReceipt.receiptNumber = currentReceiptNumber;
 
+            // VAT Calculations 
+            double beforeVAT = Math.Round(receiptTotalCost / VAT, 2);
+            currentReceipt.subtotal = beforeVAT;
+            currentReceipt.saleTax = Math.Round(receiptTotalCost - beforeVAT, 2);
+
             // Adds the receipt to the receipt list
             ((App)Application.Current).AllReceipts.Add(currentReceipt);
 
@@ -173,7 +179,7 @@ namespace TE4POS
                 return String.Format("{0:F}", Price);
             }
         }
-
+        
     }
     public class CartItem : Product, INotifyPropertyChanged
     {
@@ -203,6 +209,9 @@ namespace TE4POS
         public int receiptNumber { get; set; }
         public int articleCount { get; set; }
         public int receiptTotal { get; set; }
+        public double subtotal { get; set; }
+        public double saleTax { get; set; }
+
         public List<ReceiptProduct> ReceiptProducts { get; set; } = new List<ReceiptProduct>();
     }
 

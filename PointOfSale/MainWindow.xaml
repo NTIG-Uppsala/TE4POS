@@ -54,7 +54,7 @@
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" HorizontalAlignment="Center" Margin="0, 0, 5, 0" Text="{Binding Price}"/>
+                                    <TextBlock Grid.Column="0" HorizontalAlignment="Center" Margin="0, 0, 5, 0" Text="{Binding PriceFormatted}"/>
                                     <TextBlock Grid.Column="1" HorizontalAlignment="Center" Text="kr"/>
                                 </Grid>
                             </Grid>
@@ -95,8 +95,6 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-                
-                
 
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
