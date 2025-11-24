@@ -98,18 +98,26 @@ namespace TE4POS
         private void Checkout_Click(object sender, RoutedEventArgs e)
         {
             var time = DateTime.Now;
-            var currentReceipt = new Receipt { };
-            currentReceipt.Time = time.ToString("yyyy-MM-dd HH:mm:ss");
+            // Had to be = 0 otherwise things wouldn't work for some reason
             int receiptArticleCount = 0;
             int receiptTotalCost = 0;
             int currentReceiptNumber = 0;
 
+            // Makes a new receipt object
+            var currentReceipt = new Receipt { };
+
+            // Adds each item in the cart to the receipt
             foreach (CartItem item in ShoppingCart)
             {
+                // Finds name, price, and how many of the item is int the cart
                 string receiptProductName = item.Name;
                 int receiptProductPrice = item.Price;
                 int receiptProductAmount = item.Amount;
+
+                // Adds a total price based on item price and amount
                 int totalProductAmountPrice = receiptProductPrice * receiptProductAmount;
+
+                // Puts all of the cart items info into one object
                 var receiptProduct = new ReceiptProduct
                 {
                     receiptName = receiptProductName,
@@ -117,24 +125,34 @@ namespace TE4POS
                     receiptAmount = receiptProductAmount,
                     receiptProductTotal = totalProductAmountPrice,
                 };
+                // Adds the item object to the receipt
                 currentReceipt.ReceiptProducts.Add(receiptProduct);
+
+                // Adds the number of articles to the total number of articles in the receipt
                 receiptArticleCount += receiptProductAmount;
+                // Adds the price to the total receipt price
                 receiptTotalCost += totalProductAmountPrice;
             }
+
+            // Adds the current time, article count, and total price to the receipt
+            currentReceipt.Time = time.ToString("yyyy-MM-dd HH:mm:ss");
             currentReceipt.articleCount = receiptArticleCount;
+            currentReceipt.receiptTotal = receiptTotalCost;
 
-                                    currentReceipt.receiptTotal = receiptTotalCost;
-
+            // Adds receipt number and increments the total receipt number
             currentReceiptNumber = ((App)Application.Current).totalReceiptNumber++;
             currentReceipt.receiptNumber = currentReceiptNumber;
 
+            // Adds the receipt to the receipt list
             ((App)Application.Current).AllReceipts.Add(currentReceipt);
 
+            //Clears cart and cart price total for next order
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
         }
         private void ReceiptWindow_Click(object sender, RoutedEventArgs e)
         {
+            // opens receipt window
             ReceiptWindow objReceiptWindow = new ReceiptWindow(((App)Application.Current).AllReceipts);
             this.Close();
             objReceiptWindow.Show();

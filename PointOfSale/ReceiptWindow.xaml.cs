@@ -5,9 +5,6 @@ using System.Windows;
 
 namespace TE4POS
 {
-    /// <summary>
-    /// Interaction logic for ReceiptWindow.xaml
-    /// </summary>
     public partial class ReceiptWindow : Window
     {
         public ObservableCollection<Receipt> ReceiptList { get; set; }
