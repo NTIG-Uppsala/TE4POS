@@ -42,11 +42,13 @@
                                         <RowDefinition Height="auto"/>
                                         <RowDefinition Height="auto"/>
                                         <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
                                     <TextBlock Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Text="Café Bullen"/>
-                                    <TextBlock Grid.Row="1" HorizontalAlignment="Center" Text="%Adress%"/>
-                                    <TextBlock Grid.Row="2" HorizontalAlignment="Center" Text="Tel: 555 - 42 67 11"/>
-                                    <TextBlock Grid.Row="3" HorizontalAlignment="Center" Text="Org Nr: %00000%"/>
+                                    <TextBlock Grid.Row="1" HorizontalAlignment="Center" Text="Torggatan 11"/>
+                                    <TextBlock Grid.Row="2" HorizontalAlignment="Center" Text="123 34 Storstad"/>
+                                    <TextBlock Grid.Row="3" HorizontalAlignment="Center" Text="Tel: 555 - 42 67 11"/>
+                                    <TextBlock Grid.Row="4" HorizontalAlignment="Center" Text="Org Nr: 769966-1899"/>
                                 </Grid>
 
                                 <Line Stretch="Fill" Stroke="Black" X2="1" Grid.Row="1" StrokeDashArray="5 2" Margin="0 5 0 5"/>
@@ -64,7 +66,7 @@
                                     </Grid.RowDefinitions>
                                     <TextBlock Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Text="{Binding Time}"/>
                                     <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Text="Kvittonr:"/>
-                                    <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" Text="%000000000%"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" Text="{Binding receiptNumber}"/>
                                     <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Text="Kassör:"/>
                                     <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" Text="Kassör 1"/>
                                 </Grid>
@@ -101,7 +103,7 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock Grid.Column="1" Text=".00"/>
+                                                    <TextBlock Grid.Column="1" Text="{Binding receiptProductTotal}"/>
                                                 </Grid>
                                             </Grid>
                                         </DataTemplate>
@@ -118,9 +120,9 @@
                                         <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
                                     <TextBlock Grid.Row="0" Text="Antal art."/>
-                                    <TextBlock Grid.Row="0" HorizontalAlignment="Right" Text="%00%"/>
+                                    <TextBlock Grid.Row="0" HorizontalAlignment="Right" Text="{Binding articleCount}"/>
                                     <TextBlock Grid.Row="1" Text="TOT:"/>
-                                    <TextBlock Grid.Row="1" HorizontalAlignment="Right" Text="%00%"/>
+                                    <TextBlock Grid.Row="1" HorizontalAlignment="Right" Text="{Binding receiptTotal}"/>
                                     <TextBlock Grid.Row="2" Text="KORT"/>
                                 </Grid>
 
