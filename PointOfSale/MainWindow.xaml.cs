@@ -218,7 +218,21 @@ namespace TE4POS
             }
         }
         public double subtotal { get; set; }
+        public string subtotalFormatted
+        {
+            get
+            {
+                return String.Format("{0:F}", subtotal);
+            }
+        }
         public double saleTax { get; set; }
+        public string saleTaxFormatted
+        {
+            get
+            {
+                return String.Format("{0:F}", saleTax);
+            }
+        }
         public List<ReceiptProduct> ReceiptProducts { get; set; } = new List<ReceiptProduct>();
     }
 

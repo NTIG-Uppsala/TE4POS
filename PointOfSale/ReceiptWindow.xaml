@@ -141,13 +141,12 @@
                                     <TextBlock Grid.Column="0" Grid.Row="0" Text="Moms"/>
                                     <TextBlock Grid.Column="0" Grid.Row="1" Text="12%"/>
                                     <TextBlock Grid.Column="1" Grid.Row="0" Text="Belopp"/>
-                                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding subtotal}"/>
+                                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding subtotalFormatted}"/>
                                     <TextBlock Grid.Column="2" Grid.Row="0" Text="Netto"/>
-                                    <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding saleTax}"/>
+                                    <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding saleTaxFormatted}"/>
                                     <TextBlock Grid.Column="3" Grid.Row="0" Text="Brutto"/>
                                     <TextBlock Grid.Column="3" Grid.Row="1" Text="{Binding receiptTotalFormatted}"/>
                                 </Grid>
-                                
                             </Grid>
                         </Border>
                     </DataTemplate>
