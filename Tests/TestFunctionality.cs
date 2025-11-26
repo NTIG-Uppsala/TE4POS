@@ -110,19 +110,13 @@ namespace TestFunctionailty
         [TestMethod]
         public void ReceiptAndBackButton()
         {
-            var receiptElement = window.FindFirstDescendant(cf.ByAutomationId("Receipt"));
+            var receiptElement = window.FindFirstDescendant(cf.ByName("Kvitton"));
             var receiptBtn = receiptElement.AsButton();
             receiptBtn.Click();
 
-            // Gets the opened receipt window
-            var receiptWindow = app.GetMainWindow(new UIA3Automation());
-
-            var backElement = receiptWindow.FindFirstDescendant(cf.ByAutomationId("BackButton"));
+            var backElement = window.FindFirstDescendant(cf.ByName("Produkter"));
             var backBtn = backElement.AsButton();
             backBtn.Click();
-
-            // Gets the new instance of the main window
-            window = app.GetMainWindow(new UIA3Automation());
 
             var itemElement1 = window.FindFirstDescendant(cf.ByText("Cappuccino"));
             var itemBtn1 = itemElement1.AsButton();
@@ -140,7 +134,7 @@ namespace TestFunctionailty
             var itemElement1 = window.FindFirstDescendant(cf.ByText("Cappuccino"));
             var itemElement2 = window.FindFirstDescendant(cf.ByText("Latte"));
             var checkoutElement = window.FindFirstDescendant(cf.ByAutomationId("Finish"));
-            var receiptElement = window.FindFirstDescendant(cf.ByAutomationId("Receipt"));
+            var receiptElement = window.FindFirstDescendant(cf.ByName("Kvitton"));
 
             var itemBtn1 = itemElement1.AsButton();
             var itemBtn2 = itemElement2.AsButton();
@@ -152,22 +146,17 @@ namespace TestFunctionailty
             itemBtn2.Click();
 
             checkoutBtn.Click();
-
             
             receiptBtn.Click();
 
-            // Gets the opened receipt window
-            var receiptWindow = app.GetMainWindow(new UIA3Automation());
-
-            var receiptItem1 = receiptWindow.FindFirstDescendant(cf.ByText("Cappuccino"));
-            var receiptItem2 = receiptWindow.FindFirstDescendant(cf.ByText("Latte"));
+            var receiptItem1 = window.FindFirstDescendant(cf.ByText("Cappuccino"));
+            var receiptItem2 = window.FindFirstDescendant(cf.ByText("Latte"));
 
             var receiptItem1AsText = receiptItem1.AsTextBox();
             var receiptItem2AsText = receiptItem2.AsTextBox();
 
             Assert.AreEqual("Cappuccino", receiptItem1AsText.Name);
             Assert.AreEqual("Latte", receiptItem2AsText.Name);
-
         }
 
         [TestCleanup]

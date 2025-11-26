@@ -2,19 +2,25 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Windows;
 
 namespace TE4POS
 {
     public partial class MainWindow : Window
     {
-        // A list of all products available in the store (binds to the UI)
+        // A list of all products available in the store
         public ObservableCollection<Product> AllProducts { get; set; }
 
-        // A list of all products added to the cart (also binds to the UI)
+        // A list of all receipts 
+        public ObservableCollection<Receipt> ReceiptList { get; set; }
+
+        // A list of all products added to the cart
         public ObservableCollection<CartItem> ShoppingCart { get; set; }
 
         public double VAT = 1.12;
+
+        public int totalReceiptNumber = 1;
         public int ShoppingCartTotalPrice
         {
             get
@@ -57,7 +63,9 @@ namespace TE4POS
             };
 
             // An empty cart
-            ShoppingCart = new ObservableCollection<CartItem>{};
+            ShoppingCart = new ObservableCollection<CartItem>{ };
+
+            ReceiptList = new ObservableCollection<Receipt> { };
 
             // Makes bindings look for properties inside this class
             DataContext = this;
@@ -142,7 +150,7 @@ namespace TE4POS
             currentReceipt.receiptTotal = receiptTotalCost;
 
             // Adds receipt number and increments the total receipt number
-            currentReceiptNumber = ((App)Application.Current).totalReceiptNumber++;
+            currentReceiptNumber = totalReceiptNumber++;
             currentReceipt.receiptNumber = currentReceiptNumber;
 
             // VAT Calculations 
@@ -151,36 +159,28 @@ namespace TE4POS
             currentReceipt.saleTax = Math.Round(receiptTotalCost - beforeVAT, 2);
 
             // Adds the receipt to the receipt list
-            ((App)Application.Current).AllReceipts.Add(currentReceipt);
+            ReceiptList.Add(currentReceipt);
 
             // Clears cart and cart price total for next order
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
         }
-        private void ReceiptWindow_Click(object sender, RoutedEventArgs e)
-        {
-            // opens receipt window
-            ReceiptWindow objReceiptWindow = new ReceiptWindow(((App)Application.Current).AllReceipts);
-            this.Close();
-            objReceiptWindow.Show();
-        }
-    }
 
-    
+    }
 
     public class Product
     {
         public string Name { get; set; } = "";
         public string Category { get; set; } = "";
         public int Price { get; set; }
+
         public string PriceFormatted
         {
             get
             {
-                return String.Format("{0:F}", Price);
+                return string.Format("{0:F}", Price);
             }
         }
-        
     }
     public class CartItem : Product, INotifyPropertyChanged
     {

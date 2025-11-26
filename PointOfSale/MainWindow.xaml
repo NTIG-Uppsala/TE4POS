@@ -29,98 +29,251 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <ScrollViewer HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Hidden">
-            <ItemsControl ItemsSource="{Binding AllProducts}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Click="AddAmount_Click" HorizontalContentAlignment="Stretch" x:Name="productBtn" Width="200" Height="125">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" Text="{Binding Name}"/>
-                                <Grid Grid.Row="1" HorizontalAlignment="Center">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" HorizontalAlignment="Center" Margin="0, 0, 5, 0" Text="{Binding PriceFormatted}"/>
-                                    <TextBlock Grid.Column="1" HorizontalAlignment="Center" Text="kr"/>
-                                </Grid>
-                            </Grid>
-                        </Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <TabControl>
+            <TabItem Header="Produkter">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <ScrollViewer HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                        <ItemsControl ItemsSource="{Binding AllProducts}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Click="AddAmount_Click" HorizontalContentAlignment="Stretch" x:Name="productBtn" Width="200" Height="125">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" Text="{Binding Name}"/>
+                                            <Grid Grid.Row="1" HorizontalAlignment="Center">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" HorizontalAlignment="Center" Margin="0, 0, 5, 0" Text="{Binding PriceFormatted}"/>
+                                                <TextBlock Grid.Column="1" HorizontalAlignment="Center" Text="kr"/>
+                                            </Grid>
+                                        </Grid>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
 
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <ItemsControl Grid.Row="0" VerticalAlignment="Bottom" ItemsSource="{Binding ShoppingCart}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <ItemsControl Grid.Row="0" VerticalAlignment="Bottom" ItemsSource="{Binding ShoppingCart}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="50"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" FontSize="16" Text="{Binding Name}"/>
+                                            <TextBlock Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 10 0" FontSize="16" Text="{Binding Amount}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <Grid Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="50"/>
+                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" FontSize="16" Text="{Binding Name}"/>
-                                <TextBlock Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 10 0" FontSize="16" Text="{Binding Amount}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                                <Grid Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom" Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="50"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Row="0" Grid.Column="0" FontSize="16">Total:</Label>
+                                    <TextBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Padding="2" FontSize="13" x:Name="ShoppingCartTotal" IsReadOnly="True"></TextBox>
+                                    <Label Grid.Row="0" Grid.Column="2" FontSize="16">kr</Label>
 
-                <Grid Grid.Row="2">
+                                </Grid>
+                                <Button Grid.Row="1" Grid.Column="0" Background="Red" x:Name="Reset" Click="ResetCart_Click">Nollställ</Button>
+                                <Button Grid.Row="1" Grid.Column="1" Background="Green" x:Name="Finish" Click="Checkout_Click">Slutför</Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Kvitton">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Row="0" Grid.Column="0" VerticalAlignment="Bottom" Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0" FontSize="16">Total:</Label>
-                    <TextBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Padding="2" FontSize="13" x:Name="ShoppingCartTotal" IsReadOnly="True"></TextBox>
-                    <Label Grid.Row="0" Grid.Column="2" FontSize="16">kr</Label>
-                    
+
+                    <WrapPanel Grid.Column="0" Grid.RowSpan="2" Orientation="Horizontal">
+                        <ItemsControl  x:Name="RecieptList" ItemsSource="{Binding ReceiptList}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="Black" BorderThickness="1" Width="300" Padding="10">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid Grid.Row="0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Row="0" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Text="Café Bullen"/>
+                                                <TextBlock Grid.Row="1" HorizontalAlignment="Center" Text="Torggatan 11"/>
+                                                <TextBlock Grid.Row="2" HorizontalAlignment="Center" Text="123 34 Storstad"/>
+                                                <TextBlock Grid.Row="3" HorizontalAlignment="Center" Text="Tel: 555 - 42 67 11"/>
+                                                <TextBlock Grid.Row="4" HorizontalAlignment="Center" Text="Org Nr: 769966-1899"/>
+                                            </Grid>
+
+                                            <Line Stretch="Fill" Stroke="Black" X2="1" Grid.Row="1" StrokeDashArray="5 2" Margin="0 5 0 5"/>
+
+                                            <Grid Grid.Row="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="20"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Text="{Binding Time}"/>
+                                                <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Text="Kvittonr:"/>
+                                                <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" Text="{Binding receiptNumber}"/>
+                                                <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Text="Kassör:"/>
+                                                <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" Text="Kassör 1"/>
+                                            </Grid>
+
+                                            <Line Stretch="Fill" Stroke="Black" X2="1" Grid.Row="3" StrokeDashArray="5 2" Margin="0 5 0 5"/>
+
+                                            <ItemsControl Grid.Row="4" ItemsSource="{Binding ReceiptProducts}">
+                                                <ItemsControl.Padding>
+                                                    <Thickness>0 10 0 0</Thickness>
+                                                </ItemsControl.Padding>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="55"/>
+                                                                <ColumnDefinition Width="50"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <WrapPanel Grid.Column="0">
+                                                                <TextBlock Text="{Binding receiptName}"/>
+                                                            </WrapPanel>
+                                                            <Grid Grid.Column="1">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="auto"/>
+                                                                    <ColumnDefinition Width="10"/>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Column="0" Text="{Binding receiptAmount}"/>
+                                                                <TextBlock Grid.Column="1" Text="x"/>
+                                                                <TextBlock Grid.Column="2" Text="{Binding receiptPriceFormatted}"/>
+                                                            </Grid>
+                                                            <Grid Grid.Column="2">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="auto"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Grid.Column="1" Text="{Binding receiptProductTotalFormatted}"/>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+
+                                            <Line Stretch="Fill" Stroke="Black" X2="1" Grid.Row="5" StrokeDashArray="5 2" Margin="0 5 0 0"/>
+                                            <Line Stretch="Fill" Stroke="Black" X2="1" Grid.Row="6" StrokeDashArray="5 2" Margin="0 5 0 5"/>
+
+                                            <Grid Grid.Row="7">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                    <RowDefinition Height="auto"/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Row="0" Text="Antal art."/>
+                                                <TextBlock Grid.Row="0" HorizontalAlignment="Right" Text="{Binding articleCount}"/>
+                                                <TextBlock Grid.Row="1" Text="TOT:"/>
+                                                <TextBlock Grid.Row="1" HorizontalAlignment="Right" Text="{Binding receiptTotalFormatted}"/>
+                                                <TextBlock Grid.Row="2" Text="KORT"/>
+                                            </Grid>
+
+                                            <Line Stretch="Fill" Stroke="Black" X2="1" Grid.Row="8" StrokeDashArray="5 2" Margin="0 5 0 5"/>
+                                            <Grid Grid.Row="9">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Column="0" Grid.Row="0" Text="Moms"/>
+                                                <TextBlock Grid.Column="0" Grid.Row="1" Text="12%"/>
+                                                <TextBlock Grid.Column="1" Grid.Row="0" Text="Belopp"/>
+                                                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding subtotalFormatted}"/>
+                                                <TextBlock Grid.Column="2" Grid.Row="0" Text="Netto"/>
+                                                <TextBlock Grid.Column="2" Grid.Row="1" Text="{Binding saleTaxFormatted}"/>
+                                                <TextBlock Grid.Column="3" Grid.Row="0" Text="Brutto"/>
+                                                <TextBlock Grid.Column="3" Grid.Row="1" Text="{Binding receiptTotalFormatted}"/>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </WrapPanel>
                 </Grid>
-                    <Button Grid.Row="0" Grid.Column="1" Background="LightBlue" x:Name="Receipt" Click="ReceiptWindow_Click">Kvitton</Button>
-                    <Button Grid.Row="1" Grid.Column="0" Background="Red" x:Name="Reset" Click="ResetCart_Click">Nollställ</Button>
-                    <Button Grid.Row="1" Grid.Column="1" Background="Green" x:Name="Finish" Click="Checkout_Click">Slutför</Button>
-                </Grid>
-            </Grid>
-        </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
