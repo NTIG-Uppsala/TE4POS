@@ -1,9 +1,21 @@
-﻿using System.Collections.ObjectModel;
+﻿using QuestPDF.Companion;
+using QuestPDF.Drawing;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Windows;
+using System.Windows.Controls;
+using TE4POS;
+using static TE4POS.MainWindow;
+
+
 
 namespace TE4POS
 {
@@ -31,7 +43,7 @@ namespace TE4POS
 
         public MainWindow()
         {
-            
+
             InitializeComponent();
 
             // Creates a list with all products
@@ -63,7 +75,7 @@ namespace TE4POS
             };
 
             // An empty cart
-            ShoppingCart = new ObservableCollection<CartItem>{ };
+            ShoppingCart = new ObservableCollection<CartItem> { };
 
             ReceiptList = new ObservableCollection<Receipt> { };
 
@@ -92,7 +104,7 @@ namespace TE4POS
                         Price = product.Price,
                         Amount = 1
                     });
-                    
+
                 }
                 // Update the total price (displayed)
                 ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
@@ -100,12 +112,12 @@ namespace TE4POS
         }
 
         private void ResetCart_Click(object sender, RoutedEventArgs e)
-        {   
+        {
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
         }
 
-        private void Checkout_Click(object sender, RoutedEventArgs e)
+        private async void Checkout_Click(object sender, RoutedEventArgs e)
         {
             var time = DateTime.Now;
             // Had to be = 0 otherwise things wouldn't work for some reason
@@ -164,98 +176,209 @@ namespace TE4POS
             // Clears cart and cart price total for next order
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
+
+            var pdf = new ReceiptPdf(currentReceipt);
+            byte[] pdfBytes = await System.Threading.Tasks.Task.Run(() => pdf.GeneratePdf());
+
+            //pdf.ShowInCompanion();
+
+            string safetime = DateTime.Now.ToString("yyyyMMdd_HHmmss_");
+            string filename = $"{safetime}_{currentReceiptNumber}.pdf";
+            string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"));
+            string directory = Path.Combine(projectRoot, "Pdfs");
+            string filePath = Path.Combine(directory, filename);
+
+            Directory.CreateDirectory(directory);
+
+            await File.WriteAllBytesAsync(filePath, pdfBytes);
         }
 
+
+
+        public class Product
+        {
+            public string Name { get; set; } = "";
+            public string Category { get; set; } = "";
+            public int Price { get; set; }
+
+            public string PriceFormatted
+            {
+                get
+                {
+                    return string.Format("{0:F}", Price);
+                }
+            }
+
+        }
+        public class CartItem : Product, INotifyPropertyChanged
+        {
+            private int _amount;
+
+            public int Amount
+            {
+                get => _amount;
+                set
+                {
+                    _amount = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public class Receipt
+        {
+            public string Time { get; set; } = "";
+            public int receiptNumber { get; set; }
+            public int articleCount { get; set; }
+            public int receiptTotal { get; set; }
+            public string receiptTotalFormatted
+            {
+                get
+                {
+                    return String.Format("{0:F}", receiptTotal);
+                }
+            }
+            public double subtotal { get; set; }
+            public string subtotalFormatted
+            {
+                get
+                {
+                    return String.Format("{0:F}", subtotal);
+                }
+            }
+            public double saleTax { get; set; }
+            public string saleTaxFormatted
+            {
+                get
+                {
+                    return String.Format("{0:F}", saleTax);
+                }
+            }
+            public List<ReceiptProduct> ReceiptProducts { get; set; } = new List<ReceiptProduct>();
+        }
+
+        public class ReceiptProduct
+        {
+            public string receiptName { get; set; } = "";
+            public int receiptAmount { get; set; }
+            public int receiptPrice { get; set; }
+            public string receiptPriceFormatted
+            {
+                get
+                {
+                    return String.Format("{0:F}", receiptPrice);
+                }
+            }
+            public int receiptProductTotal { get; set; }
+            public string receiptProductTotalFormatted
+            {
+                get
+                {
+                    return String.Format("{0:F}", receiptProductTotal);
+                }
+            }
+
+        }
     }
-
-    public class Product
+    public class ReceiptPdf : IDocument
     {
-        public string Name { get; set; } = "";
-        public string Category { get; set; } = "";
-        public int Price { get; set; }
+        public Receipt Receipt { get; }
 
-        public string PriceFormatted
+        public ReceiptPdf(Receipt receipt)
         {
-            get
-            {
-                return string.Format("{0:F}", Price);
-            }
-        }
-    }
-    public class CartItem : Product, INotifyPropertyChanged
-    {
-        private int _amount;
-
-        public int Amount
-        {
-            get => _amount;
-            set
-            {
-                _amount = value;
-                OnPropertyChanged();
-            }
+            Receipt = receipt;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public DocumentMetadata GetMetadata() => new();
+        public DocumentSettings GetSettings() => new();
 
-        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public void Compose(IDocumentContainer container)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
+            container.Page(page =>
+            {
+                page.Margin(20);
+                page.Size(PageSizes.A5);
 
-    public class Receipt 
-    {
-        public string Time { get; set; } = "";
-        public int receiptNumber { get; set; }
-        public int articleCount { get; set; }
-        public int receiptTotal { get; set; }
-        public string receiptTotalFormatted
-        {
-            get
-            {
-                return String.Format("{0:F}", receiptTotal);
-            }
-        }
-        public double subtotal { get; set; }
-        public string subtotalFormatted
-        {
-            get
-            {
-                return String.Format("{0:F}", subtotal);
-            }
-        }
-        public double saleTax { get; set; }
-        public string saleTaxFormatted
-        {
-            get
-            {
-                return String.Format("{0:F}", saleTax);
-            }
-        }
-        public List<ReceiptProduct> ReceiptProducts { get; set; } = new List<ReceiptProduct>();
-    }
+                page.Header()
+                    .AlignCenter().Text($"Café Bullen").FontSize(24).Bold();
 
-    public class ReceiptProduct
-    {
-        public string receiptName { get; set; } = "";
-        public int receiptAmount { get; set; }
-        public int receiptPrice { get; set; }
-        public string receiptPriceFormatted
-        {
-            get
-            {
-                return String.Format("{0:F}", receiptPrice);
-            }
-        }
-        public int receiptProductTotal { get; set; }
-        public string receiptProductTotalFormatted
-        {
-            get
-            {
-                return String.Format("{0:F}", receiptProductTotal);
-            }
-        }
+                page.Content().Column(col =>
+                {
 
+                    col.Item().AlignCenter().Text($"Torggatan 11");
+                    col.Item().AlignCenter().Text($"123 34 Storstad");
+                    col.Item().AlignCenter().Text($"Tel: 555 - 42 67 11");
+                    col.Item().AlignCenter().Text($"Org. Nr: 769966-1899");
+
+                    col.Item().PaddingTop(5).PaddingBottom(5).LineHorizontal(1).LineColor(QuestPDF.Helpers.Colors.Black).LineDashPattern(new float[] { 4f, 4f });
+
+                    col.Item().AlignCenter().Text($"Tid: {Receipt.Time}");
+                    col.Item().AlignCenter().Text($"Kvittonr: {Receipt.receiptNumber}");
+                    col.Item().AlignCenter().Text($"Kassa: 1");
+
+                    col.Item().PaddingTop(5).PaddingBottom(5).LineHorizontal(1).LineColor(QuestPDF.Helpers.Colors.Black).LineDashPattern(new float[] { 4f, 4f });
+
+                    col.Item().Table(table =>
+                    {
+                        table.ColumnsDefinition(cols =>
+                        {
+                            cols.RelativeColumn(4); // Product name
+                            cols.RelativeColumn(1); // Amount
+                            cols.RelativeColumn(2); // Price
+                            cols.RelativeColumn(2); // Total
+                        });
+
+                        foreach (var item in Receipt.ReceiptProducts)
+                        {
+                            table.Cell().Text(item.receiptName);
+                            table.Cell().AlignRight().Text($"{item.receiptAmount.ToString()}x");
+                            table.Cell().Text($" {item.receiptPrice} kr");
+                            table.Cell().Text($"{item.receiptProductTotal} kr");
+                        }
+                    });
+                    col.Item().PaddingTop(5).LineHorizontal(1).LineColor(QuestPDF.Helpers.Colors.Black).LineDashPattern(new float[] { 4f, 4f });
+                    col.Item().PaddingTop(5).PaddingBottom(5).LineHorizontal(1).LineColor(QuestPDF.Helpers.Colors.Black).LineDashPattern(new float[] { 4f, 4f });
+
+                    col.Item().Row(row =>
+                    {
+                        row.RelativeItem().Text($"Antal art:");
+                        row.AutoItem().AlignRight().Text($"{Receipt.articleCount}");
+                    });
+
+                    col.Item().Row(row =>
+                    {
+                        row.RelativeItem().Text($"TOT:");
+                        row.AutoItem().AlignRight().Text($"{Receipt.receiptTotalFormatted} kr");
+                    });
+
+                    col.Item().Text($"KORT");
+
+                    col.Item().PaddingTop(5).PaddingBottom(5).LineHorizontal(1).LineColor(QuestPDF.Helpers.Colors.Black).LineDashPattern(new float[] { 4f, 4f });
+
+                    col.Item().Row(row =>
+                    {
+                        row.RelativeItem().Text($"Moms");
+                        row.RelativeItem().Text($"Belopp");
+                        row.RelativeItem().Text($"Netto");
+                        row.RelativeItem().Text($"Brutto");
+                    });
+
+                    col.Item().Row(row =>
+                    {
+                        row.RelativeItem().Text($"12%");
+                        row.RelativeItem().Text($"{Receipt.subtotalFormatted}");
+                        row.RelativeItem().Text($"{Receipt.saleTaxFormatted}");
+                        row.RelativeItem().Text($"{Receipt.receiptTotalFormatted}");
+                    });
+                });
+            });
+        }
     }
 }
