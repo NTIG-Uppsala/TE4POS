@@ -3,6 +3,90 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Controls;
+using System.IO;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
+using QuestPDF.Drawing;
+using System.Diagnostics;
+using QuestPDF.Companion;
+using TE4POS;
+
+public class ReceiptPdf : IDocument
+{
+    public Receipt Receipt { get; }
+
+    public ReceiptPdf(Receipt receipt)
+    {
+        Receipt = receipt;
+    }
+
+    public DocumentMetadata GetMetadata() => new();
+    public DocumentSettings GetSettings() => new();
+
+    public void Compose(IDocumentContainer container)
+    {
+        container.Page(page =>
+        {
+            page.Margin(20);
+            page.Size(PageSizes.A4);
+
+            page.Header()
+                .AlignCenter().Text($"Café Bullen").FontSize(24).Bold();
+
+            page.Content().Column(col =>
+            {
+
+                col.Item().AlignCenter().Text($"Torggatan 11");
+                col.Item().AlignCenter().Text($"123 34 Storstad");
+                col.Item().AlignCenter().Text($"Tel: 555 - 42 67 11");
+                col.Item().AlignCenter().Text($"Org. Nr: 769966-1899");
+
+                col.Item().PaddingTop(5).PaddingBottom(5).Element(content =>
+                {
+                    content.Height(1).Background(Colors.Black);
+                });
+
+                col.Item().AlignCenter().Text($"Tid: {Receipt.Time}");
+                col.Item().AlignCenter().Text($"Kvittonr: {Receipt.receiptNumber}");
+                col.Item().AlignCenter().Text($"Kassör: Kassör 1");
+                col.Item().Text($"Antal art: {Receipt.articleCount}");
+
+                col.Item().Table(table =>
+                {
+                    table.ColumnsDefinition(cols =>
+                    {
+                        cols.RelativeColumn(4); // Product name
+                        cols.RelativeColumn(1); // Amount
+                        cols.RelativeColumn(2); // Price
+                        cols.RelativeColumn(2); // Total
+                    });
+
+                    foreach (var item in Receipt.ReceiptProducts)
+                    {
+                        table.Cell().Text(item.receiptName);
+                        table.Cell().Text(item.receiptAmount.ToString());
+                        table.Cell().Text($"{item.receiptPrice} kr");
+                        table.Cell().Text($"{item.receiptProductTotal} kr");
+                    }
+                });
+
+                col.Item().PaddingTop(20).Text($"Subtotal: {Receipt.subtotalFormatted} kr");
+                col.Item().Text($"Moms: {Receipt.saleTaxFormatted} kr");
+                col.Item().Text($"TOTALT: {Receipt.receiptTotalFormatted} kr").Bold().FontSize(20);
+            });
+
+            page.Footer()
+                .AlignCenter()
+                .Text(x =>
+                {
+                    x.Span("Sida ");
+                    x.CurrentPageNumber();
+                });
+        });
+    }
+}
 
 namespace TE4POS
 {
@@ -25,7 +109,7 @@ namespace TE4POS
 
         public MainWindow()
         {
-            
+
             InitializeComponent();
 
             // Creates a list with all products
@@ -57,7 +141,7 @@ namespace TE4POS
             };
 
             // An empty cart
-            ShoppingCart = new ObservableCollection<CartItem>{};
+            ShoppingCart = new ObservableCollection<CartItem> { };
 
             // Makes bindings look for properties inside this class
             DataContext = this;
@@ -84,7 +168,7 @@ namespace TE4POS
                         Price = product.Price,
                         Amount = 1
                     });
-                    
+
                 }
                 // Update the total price (displayed)
                 ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
@@ -92,12 +176,12 @@ namespace TE4POS
         }
 
         private void ResetCart_Click(object sender, RoutedEventArgs e)
-        {   
+        {
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
         }
 
-        private void Checkout_Click(object sender, RoutedEventArgs e)
+        private async void Checkout_Click(object sender, RoutedEventArgs e)
         {
             var time = DateTime.Now;
             // Had to be = 0 otherwise things wouldn't work for some reason
@@ -153,9 +237,18 @@ namespace TE4POS
             // Adds the receipt to the receipt list
             ((App)Application.Current).AllReceipts.Add(currentReceipt);
 
+            var pdf = new ReceiptPdf(currentReceipt);
+
+            //Process.Start(new ProcessStartInfo("receipt.pdf") { UseShellExecute = true });
+
             // Clears cart and cart price total for next order
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
+            
+            await Task.Run(() =>
+            {
+                pdf.ShowInCompanion();
+            });
         }
         private void ReceiptWindow_Click(object sender, RoutedEventArgs e)
         {
@@ -166,7 +259,7 @@ namespace TE4POS
         }
     }
 
-    
+
 
     public class Product
     {
@@ -180,7 +273,7 @@ namespace TE4POS
                 return String.Format("{0:F}", Price);
             }
         }
-        
+
     }
     public class CartItem : Product, INotifyPropertyChanged
     {
@@ -204,7 +297,7 @@ namespace TE4POS
         }
     }
 
-    public class Receipt 
+    public class Receipt
     {
         public string Time { get; set; } = "";
         public int receiptNumber { get; set; }
@@ -258,4 +351,5 @@ namespace TE4POS
         }
 
     }
+
 }
