@@ -30,7 +30,7 @@ public class ReceiptPdf : IDocument
         container.Page(page =>
         {
             page.Margin(20);
-            page.Size(PageSizes.A4);
+            page.Size(PageSizes.A5);
 
             page.Header()
                 .AlignCenter().Text($"Café Bullen").FontSize(24).Bold();
@@ -43,15 +43,13 @@ public class ReceiptPdf : IDocument
                 col.Item().AlignCenter().Text($"Tel: 555 - 42 67 11");
                 col.Item().AlignCenter().Text($"Org. Nr: 769966-1899");
 
-                col.Item().PaddingTop(5).PaddingBottom(5).Element(content =>
-                {
-                    content.Height(1).Background(Colors.Black);
-                });
+                col.Item().PaddingTop(5).PaddingBottom(5).LineHorizontal(1).LineColor(QuestPDF.Helpers.Colors.Black).LineDashPattern(new float[] { 4f, 4f });
 
                 col.Item().AlignCenter().Text($"Tid: {Receipt.Time}");
                 col.Item().AlignCenter().Text($"Kvittonr: {Receipt.receiptNumber}");
-                col.Item().AlignCenter().Text($"Kassör: Kassör 1");
-                col.Item().Text($"Antal art: {Receipt.articleCount}");
+                col.Item().AlignCenter().Text($"Kassa: 1");
+
+                col.Item().PaddingTop(5).PaddingBottom(5).LineHorizontal(1).LineColor(QuestPDF.Helpers.Colors.Black).LineDashPattern(new float[] { 4f, 4f });
 
                 col.Item().Table(table =>
                 {
@@ -66,24 +64,46 @@ public class ReceiptPdf : IDocument
                     foreach (var item in Receipt.ReceiptProducts)
                     {
                         table.Cell().Text(item.receiptName);
-                        table.Cell().Text(item.receiptAmount.ToString());
-                        table.Cell().Text($"{item.receiptPrice} kr");
+                        table.Cell().AlignRight().Text($"{item.receiptAmount.ToString()}x");
+                        table.Cell().Text($" {item.receiptPrice} kr");
                         table.Cell().Text($"{item.receiptProductTotal} kr");
                     }
                 });
+                col.Item().PaddingTop(5).LineHorizontal(1).LineColor(QuestPDF.Helpers.Colors.Black).LineDashPattern(new float[] { 4f, 4f });
+                col.Item().PaddingTop(5).PaddingBottom(5).LineHorizontal(1).LineColor(QuestPDF.Helpers.Colors.Black).LineDashPattern(new float[] { 4f, 4f });
 
-                col.Item().PaddingTop(20).Text($"Subtotal: {Receipt.subtotalFormatted} kr");
-                col.Item().Text($"Moms: {Receipt.saleTaxFormatted} kr");
-                col.Item().Text($"TOTALT: {Receipt.receiptTotalFormatted} kr").Bold().FontSize(20);
-            });
-
-            page.Footer()
-                .AlignCenter()
-                .Text(x =>
+                col.Item().Row(row =>
                 {
-                    x.Span("Sida ");
-                    x.CurrentPageNumber();
+                    row.RelativeItem().Text($"Antal art:");
+                    row.AutoItem().AlignRight().Text($"{Receipt.articleCount}");
                 });
+
+                col.Item().Row(row =>
+                {
+                    row.RelativeItem().Text($"TOT:");
+                    row.AutoItem().AlignRight().Text($"{Receipt.receiptTotalFormatted} kr");
+                });
+
+                col.Item().Text($"KORT");
+
+                col.Item().PaddingTop(5).PaddingBottom(5).LineHorizontal(1).LineColor(QuestPDF.Helpers.Colors.Black).LineDashPattern(new float[] { 4f, 4f });
+
+                col.Item().Row(row =>
+                {
+                    row.RelativeItem().Text($"Moms");
+                    row.RelativeItem().Text($"Belopp");
+                    row.RelativeItem().Text($"Netto");
+                    row.RelativeItem().Text($"Brutto");
+                });
+
+                col.Item().Row(row =>
+                {
+                    row.RelativeItem().Text($"12%");
+                    row.RelativeItem().Text($"{Receipt.subtotalFormatted}");
+                    row.RelativeItem().Text($"{Receipt.saleTaxFormatted}");
+                    row.RelativeItem().Text($"{Receipt.receiptTotalFormatted}");
+                });
+            });
         });
     }
 }
@@ -237,18 +257,24 @@ namespace TE4POS
             // Adds the receipt to the receipt list
             ((App)Application.Current).AllReceipts.Add(currentReceipt);
 
-            var pdf = new ReceiptPdf(currentReceipt);
-
-            //Process.Start(new ProcessStartInfo("receipt.pdf") { UseShellExecute = true });
-
             // Clears cart and cart price total for next order
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
-            
-            await Task.Run(() =>
-            {
-                pdf.ShowInCompanion();
-            });
+
+            var pdf = new ReceiptPdf(currentReceipt);
+            byte[] pdfBytes = await System.Threading.Tasks.Task.Run(() => pdf.GeneratePdf());
+
+            //pdf.ShowInCompanion();
+
+            string safetime = DateTime.Now.ToString("yyyyMMdd_HHmmss_");
+            string filename = $"{safetime}_{currentReceiptNumber}.pdf";
+            string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"));
+            string directory = Path.Combine(projectRoot, "Pdfs");
+            string filePath = Path.Combine(directory, filename);
+
+            Directory.CreateDirectory(directory);
+
+            await File.WriteAllBytesAsync(filePath, pdfBytes);
         }
         private void ReceiptWindow_Click(object sender, RoutedEventArgs e)
         {
