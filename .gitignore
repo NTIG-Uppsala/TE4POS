@@ -9,6 +9,8 @@
 *.user
 *.userosscache
 *.sln.docstates
+# Pdf Folder 
+Pdfs/
 
 # Installatiion folder
 CaféBullenPOSInstall/
