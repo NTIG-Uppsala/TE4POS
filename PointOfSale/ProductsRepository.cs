@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Data.SQLite;
-using System.Data;
 
 namespace TE4POS
 {
@@ -20,11 +13,11 @@ namespace TE4POS
         public ObservableCollection<Product> AllProducts { get; private set; }
             = new ObservableCollection<Product>();
 
-        private string connectionString = @"Data Source=..\..\..\..\..\TE4POS\PointOfSale\database.db;Version=3";
+        private string connectionString = @"Data Source=..\..\..\..\..\TE4POS\PointOfSale\Databases\Database.db;Version=3";
 
         public IEnumerable<Product> GetAllProducts()
         {
-            AllProducts.Clear(); // important to avoid duplicates
+            AllProducts.Clear(); // important might cause duplication otherwise
 
             using (var connection = new SQLiteConnection(connectionString))
             {
@@ -47,7 +40,6 @@ namespace TE4POS
                     }
                 }
             }
-
             return AllProducts;
         }
     }

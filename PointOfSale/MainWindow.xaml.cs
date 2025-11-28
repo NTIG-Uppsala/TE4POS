@@ -1,19 +1,16 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Windows;
 
 namespace TE4POS
 {
     public partial class MainWindow : Window
     {
+        private SQLiteProductsRepository repo = new SQLiteProductsRepository();
+
         // A list of all products available in the store
         public ObservableCollection<Product> AllProducts { get; set; }
-
-        private SQLiteProductsRepository repo = new SQLiteProductsRepository();
 
         // A list of all receipts 
         public ObservableCollection<Receipt> ReceiptList { get; set; }
@@ -37,11 +34,10 @@ namespace TE4POS
             
             InitializeComponent();
 
-            repo.GetAllProducts(); // load from database
-            AllProducts = repo.AllProducts; // bind to ObservableCollection
-
             // Creates the database file if it doesn't exist
-            //DatabaseHelper.InitializeDatabase();
+            DatabaseHelper.InitializeDatabase();
+            repo.GetAllProducts(); // load products from database
+            AllProducts = repo.AllProducts; // bind to the ObservableCollection
 
             // An empty cart
             ShoppingCart = new ObservableCollection<CartItem>{ };
@@ -90,6 +86,7 @@ namespace TE4POS
         private void Checkout_Click(object sender, RoutedEventArgs e)
         {
             var time = DateTime.Now;
+
             // Had to be = 0 otherwise things wouldn't work for some reason
             int receiptArticleCount = 0;
             int receiptTotalCost = 0;
@@ -105,6 +102,7 @@ namespace TE4POS
                 string receiptProductName = item.Name;
                 int receiptProductPrice = item.Price;
                 int receiptProductAmount = item.Amount;
+                // Current stock - receiptProductAmount = new stock
 
                 // Adds a total price based on item price and amount
                 int totalProductAmountPrice = receiptProductPrice * receiptProductAmount;
@@ -140,6 +138,9 @@ namespace TE4POS
             currentReceipt.subtotal = beforeVAT;
             currentReceipt.saleTax = Math.Round(receiptTotalCost - beforeVAT, 2);
 
+            // Updates the stock in the database
+            DatabaseHelper.RemoveStock(ShoppingCart);
+
             // Adds the receipt to the receipt list
             ReceiptList.Add(currentReceipt);
 
@@ -155,7 +156,6 @@ namespace TE4POS
         public int Id { get; set; }
         public string Name { get; set; } = "";
         public string Category { get; set; } = "";
-
         public int Stock { get; set; }
         public int Price { get; set; }
 
@@ -167,9 +167,10 @@ namespace TE4POS
             }
         }
 
-        // Parameterless constructor for derived classes and serialization
+        // Parameterless constructor for derived classes
         public Product()
         {
+
         }
 
         public Product(string name, string category, int price)

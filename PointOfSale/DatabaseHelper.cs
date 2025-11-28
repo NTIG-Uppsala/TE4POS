@@ -1,12 +1,14 @@
-﻿using System.Data.SQLite;
+﻿using System.Collections.ObjectModel;
+using System.Data.SQLite;
 using System.IO;
 
 namespace TE4POS
 {
     public static class DatabaseHelper
     {
-        private static readonly string connectionString = @"Data Source=..\..\..\..\..\TE4POS\PointOfSale\database.db;Version=3";
-        private static readonly string dbFilePath = @"..\..\..\..\..\TE4POS\PointOfSale\database.db";
+        private static readonly string connectionString = @"Data Source=..\..\..\..\..\TE4POS\PointOfSale\Databases\Database.db;Version=3";
+        private static readonly string dbFilePath = @"..\..\..\..\..\TE4POS\PointOfSale\Databases\Database.db";
+        private static readonly string dbTestFilePath = @"..\..\..\..\..\TE4POS\PointOfSale\Databases\TestDatabase.db";
         public static void InitializeDatabase()
         {
             if (!File.Exists(dbFilePath))
@@ -44,6 +46,46 @@ namespace TE4POS
                 }
                 AddProducts();
             }
+            if (!File.Exists(dbTestFilePath))
+            {
+                InitializeTestDatabase();
+            }
+        }
+
+        public static void InitializeTestDatabase()
+        {
+            SQLiteConnection.CreateFile(dbTestFilePath);
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                // Creates the tables
+                string createProductsQuery = @"
+                CREATE TABLE IF NOT EXISTS Products (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name TEXT NOT NULL,
+                    Price INTEGER NOT NULL,
+                    Category TEXT NOT NULL,
+                    Stock INTEGER NOT NULL
+                )";
+
+                string createReceiptsQuery = @"
+                CREATE TABLE IF NOT EXISTS Receipts (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Name TEXT NOT NULL,
+                    Price REAL NOT NULL
+                )";
+
+                using (var command = new SQLiteCommand(connection))
+                {
+                    command.CommandText = createProductsQuery;
+                    command.ExecuteNonQuery();
+
+                    command.CommandText = createReceiptsQuery;
+                    command.ExecuteNonQuery();
+                }
+            }
+            AddProducts();
         }
 
         public static void AddProducts()
@@ -90,51 +132,32 @@ namespace TE4POS
                     cmd.Parameters.Add(new SQLiteParameter("@category"));
                     cmd.Parameters.Add(new SQLiteParameter("@stock"));
 
-                    foreach (var p in products)
+                    foreach (var product in products)
                     {
-                        cmd.Parameters["@name"].Value = p.Name;
-                        cmd.Parameters["@price"].Value = p.Price;
-                        cmd.Parameters["@category"].Value = p.Category;
-                        cmd.Parameters["@stock"].Value = p.Stock;
+                        cmd.Parameters["@name"].Value = product.Name;
+                        cmd.Parameters["@price"].Value = product.Price;
+                        cmd.Parameters["@category"].Value = product.Category;
+                        cmd.Parameters["@stock"].Value = product.Stock;
                         cmd.ExecuteNonQuery();
                     }
 
                     tx.Commit();
+                }
+            }
+        }
 
-                    //connection.Open();
-                    //string insertProductQuery = @"
-                    //INSERT INTO Products (Name, Price, Category, Stock) VALUES
-                    //('Bryggkaffe (liten)', 28, Varma_drycker, 100),
-                    //('Bryggkaffe (stor)', 34, Varma_drycker, 100),
-                    //('Cappuccino', 42, Varma_drycker, 100),
-                    //('Latte', 46, Varma_drycker, 100),
-                    //('Varm choklad med grädde', 45, Varma_drycker, 100),
-                    //('Te (svart, grönt eller örtte)', 32, Varma_drycker, 100),
-
-                    //('Islatte', 48, Kalla_drycker, 100)
-                    //('Ischai', 46, Kalla_drycker, 100)
-                    //('Läsk (33cl)', 22, Kalla_drycker, 100)
-                    //('Mineralvatten', 20, Kalla_drycker, 100)
-                    //('Smoothie (jordgubb & banan)', 55, Kalla_drycker, 100)
-                    //('Färskpressad apelsinjuice', 49, Kalla_drycker, 100)
-
-                    //('Kanelbulle', 25, Bakverk, 100),
-                    //('Chokladboll', 18, Bakverk, 100),
-                    //('Morotskaka (bit)', 38, Bakverk, 100),
-                    //('Cheesecake (bit)', 42, Bakverk, 100),
-                    //('Crossiant', 26, Bakverk, 100),
-                    //('Muffins (blåbär)', 28, Bakverk, 100),
-
-                    //('Smörgås med (ost och skinka)', 38, Enkel_mat, 100),
-                    //('Räksmörgås', 69, Enkel_mat, 100),
-                    //('Panini (kyckling & pesto)', 58, Enkel_mat, 100),
-                    //('Soppa med bröd', 65, Enkel_mat, 100),
-                    //('Quinoasallad', 72, Enkel_mat, 100);
-                    //";
-                    //using (SQLiteCommand command = new SQLiteCommand(insertProductQuery, connection))
-                    //{
-                    //    command.ExecuteNonQuery();
-                    //}
+        public static void RemoveStock(ObservableCollection<CartItem> allItems)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                foreach (var item in allItems)
+                {
+                    string query = $"UPDATE Products SET Stock = Stock - {item.Amount} WHERE Name = '{item.Name}'";
+                    using (var cmd = new SQLiteCommand(query, connection))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
         }
