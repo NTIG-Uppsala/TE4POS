@@ -134,24 +134,26 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="500"/>
                     </Grid.ColumnDefinitions>
-                    <ItemsControl Grid.Column="0" ItemsSource="{Binding ReceiptList}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Button Height="50" Click="Receipt_Click" Tag="{Binding receiptNumber}">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock FontSize="20" Grid.Column="0" Margin="5 0" Text="{Binding Time}"/>
-                                        <TextBlock FontSize="20" Grid.Column="1" Margin="5 0" Text="{Binding receiptNumber}"/>
-                                        <TextBlock FontSize="20" Grid.Column="2" Margin="5 0" Text="{Binding receiptTotalFormatted}"/>
-                                    </Grid>
-                                </Button>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl Grid.Column="0" ItemsSource="{Binding ReceiptList}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Height="50" Click="Receipt_Click" Tag="{Binding receiptNumber}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock FontSize="20" Grid.Column="0" Margin="5 0" Text="{Binding Time}"/>
+                                            <TextBlock FontSize="20" Grid.Column="1" Margin="5 0" Text="{Binding receiptNumber}"/>
+                                            <TextBlock FontSize="20" Grid.Column="2" Margin="5 0" Text="{Binding receiptTotalFormatted}"/>
+                                        </Grid>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                     <Grid x:Name="showReceipt" VerticalAlignment="Top" Grid.Column="2"/>
                 </Grid>
             </TabItem>
