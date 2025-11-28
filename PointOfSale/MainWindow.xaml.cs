@@ -3,6 +3,7 @@ using QuestPDF.Drawing;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -12,6 +13,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using TE4POS;
 using static TE4POS.MainWindow;
 
@@ -158,6 +160,7 @@ namespace TE4POS
 
             // Adds the current time, article count, and total price to the receipt
             currentReceipt.Time = time.ToString("yyyy-MM-dd HH:mm:ss");
+            currentReceipt.PDFFormatedTime = time.ToString("yyyyMMdd_HHmmss_");
             currentReceipt.articleCount = receiptArticleCount;
             currentReceipt.receiptTotal = receiptTotalCost;
 
@@ -177,23 +180,54 @@ namespace TE4POS
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
 
-            var pdf = new ReceiptPdf(currentReceipt);
+            generateReceiptPDF(currentReceipt.PDFFormatedTime, currentReceiptNumber);
+        }
+
+
+        System.Windows.Controls.WebBrowser browser = new System.Windows.Controls.WebBrowser();
+        private void Receipt_Click(object sender, RoutedEventArgs e)
+        {
+            showReceipt.Children.Clear();
+            int thisReceipt = int.Parse(((Button)sender).Tag.ToString());
+
+            foreach(Receipt receipt in ReceiptList)
+            {
+                if(receipt.receiptNumber == thisReceipt)
+                {
+                    string thisReceiptTime = receipt.PDFFormatedTime;
+                    string filename = $"{thisReceiptTime}_{thisReceipt}.pdf";
+                    System.Diagnostics.Debug.WriteLine("Log: Now showing receipt " + thisReceipt);
+                    System.Diagnostics.Debug.WriteLine("Log: Receipt time is " + thisReceiptTime);
+                    System.Diagnostics.Debug.WriteLine("Log: The filename would be: " + filename);
+
+                    string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"));
+                    string directory = Path.Combine(projectRoot, "Pdfs");
+                    string filePath = Path.Combine(directory, filename);
+
+                    showReceipt.Children.Add(browser);
+                    browser.Navigate(filePath);
+                    showReceipt.Opacity = 200;
+                }
+            }
+        }
+
+        public async void generateReceiptPDF(string dateAndTime , int receiptNumber)
+        {
+            var receipt = ReceiptList[receiptNumber-1];
+
+            var pdf = new ReceiptPdf(receipt);
             byte[] pdfBytes = await System.Threading.Tasks.Task.Run(() => pdf.GeneratePdf());
 
-            //pdf.ShowInCompanion();
-
-            string safetime = DateTime.Now.ToString("yyyyMMdd_HHmmss_");
-            string filename = $"{safetime}_{currentReceiptNumber}.pdf";
+            string safetime = dateAndTime;
+            string filename = $"{safetime}_{receiptNumber}.pdf";
             string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"));
             string directory = Path.Combine(projectRoot, "Pdfs");
             string filePath = Path.Combine(directory, filename);
 
             Directory.CreateDirectory(directory);
-
+            
             await File.WriteAllBytesAsync(filePath, pdfBytes);
         }
-
-
 
         public class Product
         {
@@ -235,6 +269,7 @@ namespace TE4POS
         public class Receipt
         {
             public string Time { get; set; } = "";
+            public string PDFFormatedTime { get; set; } = "";
             public int receiptNumber { get; set; }
             public int articleCount { get; set; }
             public int receiptTotal { get; set; }
@@ -304,7 +339,7 @@ namespace TE4POS
             container.Page(page =>
             {
                 page.Margin(20);
-                page.Size(PageSizes.A5);
+                page.ContinuousSize(400);
 
                 page.Header()
                     .AlignCenter().Text($"Café Bullen").FontSize(24).Bold();
@@ -329,9 +364,9 @@ namespace TE4POS
                     {
                         table.ColumnsDefinition(cols =>
                         {
-                            cols.RelativeColumn(4); // Product name
+                            cols.RelativeColumn(5); // Product name
                             cols.RelativeColumn(1); // Amount
-                            cols.RelativeColumn(2); // Price
+                            cols.RelativeColumn(1); // Price
                             cols.RelativeColumn(2); // Total
                         });
 
@@ -340,7 +375,7 @@ namespace TE4POS
                             table.Cell().Text(item.receiptName);
                             table.Cell().AlignRight().Text($"{item.receiptAmount.ToString()}x");
                             table.Cell().Text($" {item.receiptPrice} kr");
-                            table.Cell().Text($"{item.receiptProductTotal} kr");
+                            table.Cell().AlignRight().Text($"{item.receiptProductTotal} kr");
                         }
                     });
                     col.Item().PaddingTop(5).LineHorizontal(1).LineColor(QuestPDF.Helpers.Colors.Black).LineDashPattern(new float[] { 4f, 4f });
