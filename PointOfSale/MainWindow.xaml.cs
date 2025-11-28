@@ -102,7 +102,6 @@ namespace TE4POS
                 string receiptProductName = item.Name;
                 int receiptProductPrice = item.Price;
                 int receiptProductAmount = item.Amount;
-                // Current stock - receiptProductAmount = new stock
 
                 // Adds a total price based on item price and amount
                 int totalProductAmountPrice = receiptProductPrice * receiptProductAmount;
@@ -137,12 +136,14 @@ namespace TE4POS
             double beforeVAT = Math.Round(receiptTotalCost / VAT, 2);
             currentReceipt.subtotal = beforeVAT;
             currentReceipt.saleTax = Math.Round(receiptTotalCost - beforeVAT, 2);
-
-            // Updates the stock in the database
-            DatabaseHelper.RemoveStock(ShoppingCart);
+            
+            DatabaseHelper.AddReceipt(currentReceipt);
 
             // Adds the receipt to the receipt list
             ReceiptList.Add(currentReceipt);
+
+            // Updates the stock in the database
+            DatabaseHelper.RemoveStock(ShoppingCart);
 
             // Clears cart and cart price total for next order
             ShoppingCart.Clear();

@@ -56,9 +56,11 @@
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition/>
                                                     <ColumnDefinition/>
+                                                    <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Grid.Column="0" HorizontalAlignment="Center" Margin="0, 0, 5, 0" Text="{Binding PriceFormatted}"/>
                                                 <TextBlock Grid.Column="1" HorizontalAlignment="Center" Text="kr"/>
+                                                <TextBlock Grid.Column="2" HorizontalAlignment="Center" Margin="0, 0, 5, 0" Text="{Binding Stock}"/>
                                             </Grid>
                                         </Grid>
                                     </Button>
