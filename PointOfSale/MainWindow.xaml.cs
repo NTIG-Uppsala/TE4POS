@@ -2,12 +2,16 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using ProductsRepository;
+using ReceiptsRepository;
 
 namespace TE4POS
 {
     public partial class MainWindow : Window
     {
-        private SQLiteProductsRepository repo = new SQLiteProductsRepository();
+        private SQLiteProductsRepository productsRepo = new SQLiteProductsRepository();
+
+        private SQLiteReceiptsRepository receiptsRepo = new SQLiteReceiptsRepository();
 
         // A list of all products available in the store
         public ObservableCollection<Product> AllProducts { get; set; }
@@ -20,7 +24,6 @@ namespace TE4POS
 
         public double VAT = 1.12;
 
-        public int totalReceiptNumber = 1;
         public int ShoppingCartTotalPrice
         {
             get
@@ -36,14 +39,17 @@ namespace TE4POS
 
             // Creates the database file if it doesn't exist
             DatabaseHelper.InitializeDatabase();
-            repo.GetAllProducts(); // load products from database
-            AllProducts = repo.AllProducts; // bind to the ObservableCollection
+
+            // Loads data from the database
+            productsRepo.GetAllProducts();
+            receiptsRepo.GetAllReceipts();
+
+            // bind to the ObservableCollection
+            AllProducts = productsRepo.AllProducts; 
+            ReceiptList = receiptsRepo.AllReceipts; 
 
             // An empty cart
             ShoppingCart = new ObservableCollection<CartItem>{ };
-
-            //All receipts are stored here
-            ReceiptList = new ObservableCollection<Receipt> { };
 
             // Makes bindings look for properties inside this class
             DataContext = this;
@@ -90,7 +96,6 @@ namespace TE4POS
             // Had to be = 0 otherwise things wouldn't work for some reason
             int receiptArticleCount = 0;
             int receiptTotalCost = 0;
-            int currentReceiptNumber = 0;
 
             // Makes a new receipt object
             var currentReceipt = new Receipt { };
@@ -128,10 +133,6 @@ namespace TE4POS
             currentReceipt.articleCount = receiptArticleCount;
             currentReceipt.receiptTotal = receiptTotalCost;
 
-            // Adds receipt number and increments the total receipt number
-            currentReceiptNumber = totalReceiptNumber++;
-            currentReceipt.receiptNumber = currentReceiptNumber;
-
             // VAT Calculations 
             double beforeVAT = Math.Round(receiptTotalCost / VAT, 2);
             currentReceipt.subtotal = beforeVAT;
@@ -168,7 +169,7 @@ namespace TE4POS
             }
         }
 
-        // Parameterless constructor for derived classes
+        // Parameterless constructor for derived classes (CartItem for now)
         public Product()
         {
 

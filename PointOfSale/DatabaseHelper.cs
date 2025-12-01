@@ -31,25 +31,25 @@ namespace TE4POS
                         Category TEXT NOT NULL,
                         Stock INTEGER NOT NULL
                     )"; 
-
+                    
                     string createReceiptsQuery = @"
                     CREATE TABLE IF NOT EXISTS Receipts (
                         ReceiptNumber INTEGER PRIMARY KEY AUTOINCREMENT,
-                        Time TEXT NOT NULL,
                         ArticleCount INTEGER NOT NULL,
                         ReceiptTotal INTEGER NOT NULL,
-                        Subtotal TEXT NOT NULL,
-                        Saletax TEXT NOT NULL,
-                        Products BLOB NOT NULL
+                        Subtotal FLOAT NOT NULL,
+                        Saletax FLOAT NOT NULL,
+                        Time TEXT NOT NULL
                     )";
 
                     string createReceiptProductsQuery = @"
-                    CREATE TABLE IF NOT EXISTS ReciptProducts(
+                    CREATE TABLE IF NOT EXISTS ReceiptProducts(
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         ReceiptNumber INTEGER NOT NULL,
                         ProductId INTEGER NOT NULL,
                         Quantity INTEGER NOT NULL,
                         UnitPrice INTEGER NOT NULL,
+                        TotalPrice INTEGER NOT NULL,
                         FOREIGN KEY (ReceiptNumber) REFERENCES Receipts(ReceiptNumber),
                         FOREIGN KEY (ProductId) REFERENCES Products(Id)
                     )";
@@ -98,12 +98,11 @@ namespace TE4POS
                 string createReceiptsQuery = @"
                     CREATE TABLE IF NOT EXISTS Receipts (
                         ReceiptNumber INTEGER PRIMARY KEY AUTOINCREMENT,
-                        Time TEXT NOT NULL,
                         ArticleCount INTEGER NOT NULL,
                         ReceiptTotal INTEGER NOT NULL,
-                        Subtotal TEXT NOT NULL,
-                        Saletax TEXT NOT NULL,
-                        Products BLOB NOT NULL
+                        Subtotal FLOAT NOT NULL,
+                        Saletax FLOAT NOT NULL,
+                        Time TEXT NOT NULL
                     )";
 
                 string createReceiptProductsQuery = @"
@@ -113,6 +112,7 @@ namespace TE4POS
                         ProductId INTEGER NOT NULL,
                         Quantity INTEGER NOT NULL,
                         UnitPrice INTEGER NOT NULL,
+                        TotalPrice INTEGER NOT NULL,
                         FOREIGN KEY (ReceiptNumber) REFERENCES Receipts(ReceiptNumber),
                         FOREIGN KEY (ProductId) REFERENCES Products(Id)
                     )";
@@ -131,6 +131,7 @@ namespace TE4POS
             }
             AddProducts(testConnectionString);
         }
+
         //public static void AddReceipts()
         //{
         //    var receipts = new[]
@@ -222,24 +223,6 @@ namespace TE4POS
             }
         }
 
-        public static void ClearDatabase()
-        {
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
-            {
-                connection.Open();
-                string deleteProductsQuery = "DELETE FROM Products";
-                string deleteReceiptsQuery = "DELETE FROM Receipts";
-                using (var cmd = new SQLiteCommand(deleteProductsQuery, connection))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-                using (var cmd = new SQLiteCommand(deleteReceiptsQuery, connection))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
         public static void RemoveStock(ObservableCollection<CartItem> allItems)
         {
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
@@ -258,34 +241,38 @@ namespace TE4POS
 
         public static void AddReceipt(Receipt receipt)
         {
-            // Method to add receipt to the database
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
+
                 string insertReceiptQuery = @"
-                    INSERT INTO Receipts (Time, ArticleCount, ReceiptTotal, Subtotal, Saletax, Products)
-                    VALUES (@ReceiptNumber, @time, @articleCount, @receiptTotal, @subtotal, @saletax)";
+                INSERT INTO Receipts (Time, ArticleCount, ReceiptTotal, Subtotal, Saletax)
+                VALUES (@time, @articleCount, @receiptTotal, @subtotal, @saletax)";
+
                 using (var cmd = new SQLiteCommand(insertReceiptQuery, connection))
                 {
-                    cmd.Parameters.AddWithValue("@ReceiptNumber", receipt.receiptNumber);
                     cmd.Parameters.AddWithValue("@time", receipt.Time);
                     cmd.Parameters.AddWithValue("@articleCount", receipt.articleCount);
                     cmd.Parameters.AddWithValue("@receiptTotal", receipt.receiptTotal);
                     cmd.Parameters.AddWithValue("@subtotal", receipt.subtotal);
                     cmd.Parameters.AddWithValue("@saletax", receipt.saleTax);
+
                     cmd.ExecuteNonQuery();
+
+                    // Get the generated receipt number
+                    receipt.receiptNumber = (int)connection.LastInsertRowId;
                 }
             }
 
+            // Insert receipt products
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
                 foreach (var item in receipt.ReceiptProducts)
                 {
-                    string selectProductIdQuery = "SELECT Id FROM Products WHERE Name = @productName";
                     string insertReceiptProductQuery = @"
-                        INSERT INTO ReceiptProducts (ReceiptNumber, ProductId, Quantity, UnitPrice)
-                        VALUES (@receiptNumber, @productId, @quantity, @unitPrice)";
+                    INSERT INTO ReceiptProducts (ReceiptNumber, ProductId, Quantity, UnitPrice, TotalPrice)
+                    VALUES (@receiptNumber, @productId, @quantity, @unitPrice, @totalPrice)";
                     using (var cmd = new SQLiteCommand(insertReceiptProductQuery, connection))
                     {
                         cmd.Parameters.AddWithValue("@receiptNumber", receipt.receiptNumber);
@@ -298,24 +285,29 @@ namespace TE4POS
                 }
             }
         }
+
         public static int GetProductId(string productName)
         {
             string selectProductIdQuery = "SELECT Id FROM Products WHERE Name = @productName";
 
-            using (var command = new SQLiteCommand(connectionString))
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
-                command.Parameters.AddWithValue("@productName", productName);
-
-                // ExecuteScalar returns the first column of the first row
-                object result = command.ExecuteScalar();
-
-                if (result != null && int.TryParse(result.ToString(), out int productId))
+                connection.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(selectProductIdQuery, connection))
                 {
-                    return productId;
-                }
-                else
-                {
-                    throw new Exception("Product not found or invalid Id");
+                    cmd.Parameters.AddWithValue("@productName", productName);
+
+                    // ExecuteScalar returns the first column of the first row
+                    object result = cmd.ExecuteScalar();
+
+                    if (result != null && int.TryParse(result.ToString(), out int productId))
+                    {
+                        return productId;
+                    }
+                    else
+                    {
+                        throw new Exception("Product not found or invalid Id");
+                    }
                 }
             }
         }

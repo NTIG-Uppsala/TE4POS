@@ -1,7 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.Data.SQLite;
+using TE4POS;
 
-namespace TE4POS
+namespace ProductsRepository
 {
     public interface IProductsRepository
     {
