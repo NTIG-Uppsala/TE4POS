@@ -5,22 +5,21 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Runtime.Serialization;
 using System.Windows;
-using System.Windows.Controls;
-using TE4POS;
 using static TE4POS.MainWindow;
-
-
+using ProductsRepository;
+using ReceiptsRepository;
 
 namespace TE4POS
 {
     public partial class MainWindow : Window
     {
+        private SQLiteProductsRepository productsRepo = new SQLiteProductsRepository();
+
+        private SQLiteReceiptsRepository receiptsRepo = new SQLiteReceiptsRepository();
+
         // A list of all products available in the store
         public ObservableCollection<Product> AllProducts { get; set; }
 
@@ -32,7 +31,6 @@ namespace TE4POS
 
         public double VAT = 1.12;
 
-        public int totalReceiptNumber = 1;
         public int ShoppingCartTotalPrice
         {
             get
@@ -43,41 +41,22 @@ namespace TE4POS
 
         public MainWindow()
         {
-
+            
             InitializeComponent();
 
-            // Creates a list with all products
-            AllProducts = new ObservableCollection<Product>
-            {
-                new Product { Name = "Bryggkaffe (liten)", Price = 28, Category = "Varma drycker" },
-                new Product { Name = "Bryggkaffe (stor)", Price = 34, Category = "Varma drycker" },
-                new Product { Name = "Cappuccino", Price = 42, Category = "Varma drycker" },
-                new Product { Name = "Latte", Price = 46, Category = "Varma drycker" },
-                new Product { Name = "Varm choklad med grädde", Price = 45, Category = "Varma drycker" },
-                new Product { Name = "Te (svart, grönt eller örtte)", Price = 32, Category = "Varma drycker" },
-                new Product { Name = "Islatte", Price = 48, Category = "Kalla drycker" },
-                new Product { Name = "Ischai", Price = 46, Category = "Kalla drycker" },
-                new Product { Name = "Läsk (33 cl)", Price = 22, Category = "Kalla drycker" },
-                new Product { Name = "Mineralvatten", Price = 20, Category = "Kalla drycker" },
-                new Product { Name = "Smoothie (jordgubb & banan)", Price = 55, Category = "Kalla drycker" },
-                new Product { Name = "Färskpressad apelsinjuice", Price = 49, Category = "Kalla drycker" },
-                new Product { Name = "Kanelbulle", Price = 25, Category = "Bakverk" },
-                new Product { Name = "Chokladboll", Price = 18, Category = "Bakverk" },
-                new Product { Name = "Morotskaka (bit)", Price = 38, Category = "Bakverk" },
-                new Product { Name = "Cheesecake (bit)", Price = 42, Category = "Bakverk" },
-                new Product { Name = "Croissant", Price = 26, Category = "Bakverk" },
-                new Product { Name = "Muffins (blåbär)", Price = 28, Category = "Bakverk" },
-                new Product { Name = "Smörgås (ost & skinka)", Price = 38, Category = "Enkel mat" },
-                new Product { Name = "Räksmörgås", Price = 69, Category = "Enkel mat" },
-                new Product { Name = "Panini (kyckling & pesto)", Price = 58, Category = "Enkel mat" },
-                new Product { Name = "Soppa med bröd", Price = 65, Category = "Enkel mat" },
-                new Product { Name = "Quinoasallad", Price = 72, Category = "Enkel mat" },
-            };
+            // Creates the database file if it doesn't exist
+            DatabaseHelper.InitializeDatabase();
+
+            // Loads data from the database
+            productsRepo.GetAllProducts();
+            receiptsRepo.GetAllReceipts();
+
+            // bind to the ObservableCollection
+            AllProducts = productsRepo.AllProducts; 
+            ReceiptList = receiptsRepo.AllReceipts; 
 
             // An empty cart
             ShoppingCart = new ObservableCollection<CartItem> { };
-
-            ReceiptList = new ObservableCollection<Receipt> { };
 
             // Makes bindings look for properties inside this class
             DataContext = this;
@@ -104,7 +83,7 @@ namespace TE4POS
                         Price = product.Price,
                         Amount = 1
                     });
-
+                    
                 }
                 // Update the total price (displayed)
                 ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
@@ -112,7 +91,7 @@ namespace TE4POS
         }
 
         private void ResetCart_Click(object sender, RoutedEventArgs e)
-        {
+        {   
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
         }
@@ -120,10 +99,10 @@ namespace TE4POS
         private async void Checkout_Click(object sender, RoutedEventArgs e)
         {
             var time = DateTime.Now;
+
             // Had to be = 0 otherwise things wouldn't work for some reason
             int receiptArticleCount = 0;
             int receiptTotalCost = 0;
-            int currentReceiptNumber = 0;
 
             // Makes a new receipt object
             var currentReceipt = new Receipt { };
@@ -161,17 +140,18 @@ namespace TE4POS
             currentReceipt.articleCount = receiptArticleCount;
             currentReceipt.receiptTotal = receiptTotalCost;
 
-            // Adds receipt number and increments the total receipt number
-            currentReceiptNumber = totalReceiptNumber++;
-            currentReceipt.receiptNumber = currentReceiptNumber;
-
             // VAT Calculations 
             double beforeVAT = Math.Round(receiptTotalCost / VAT, 2);
             currentReceipt.subtotal = beforeVAT;
             currentReceipt.saleTax = Math.Round(receiptTotalCost - beforeVAT, 2);
+            
+            DatabaseHelper.AddReceipt(currentReceipt);
 
             // Adds the receipt to the receipt list
             ReceiptList.Add(currentReceipt);
+
+            // Updates the stock in the database
+            DatabaseHelper.RemoveStock(ShoppingCart);
 
             // Clears cart and cart price total for next order
             ShoppingCart.Clear();
@@ -182,8 +162,9 @@ namespace TE4POS
 
             //pdf.ShowInCompanion();
 
+
             string safetime = DateTime.Now.ToString("yyyyMMdd_HHmmss_");
-            string filename = $"{safetime}_{currentReceiptNumber}.pdf";
+            string filename = $"{safetime}_{DatabaseHelper.GetCurrentReceiptNumber}.pdf";
             string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"));
             string directory = Path.Combine(projectRoot, "Pdfs");
             string filePath = Path.Combine(directory, filename);
@@ -195,42 +176,56 @@ namespace TE4POS
 
 
 
-        public class Product
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public string Category { get; set; } = "";
+        public int Stock { get; set; }
+        public int Price { get; set; }
+
+        public string PriceFormatted
         {
-            public string Name { get; set; } = "";
-            public string Category { get; set; } = "";
-            public int Price { get; set; }
-
-            public string PriceFormatted
+            get
             {
-                get
-                {
-                    return string.Format("{0:F}", Price);
-                }
-            }
-
-        }
-        public class CartItem : Product, INotifyPropertyChanged
-        {
-            private int _amount;
-
-            public int Amount
-            {
-                get => _amount;
-                set
-                {
-                    _amount = value;
-                    OnPropertyChanged();
-                }
-            }
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            public void OnPropertyChanged([CallerMemberName] string propertyName = null)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                return string.Format("{0:F}", Price);
             }
         }
+
+        // Parameterless constructor for derived classes (CartItem for now)
+        public Product()
+        {
+
+        }
+
+        public Product(string name, string category, int price)
+        {
+            Name = name;
+            Category = category;
+            Price = price;
+        }
+    }
+    public class CartItem : Product, INotifyPropertyChanged
+    {
+        private int _amount;
+
+        public int Amount
+        {
+            get => _amount;
+            set
+            {
+                _amount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
 
         public class Receipt
         {

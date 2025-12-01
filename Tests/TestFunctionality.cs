@@ -3,7 +3,7 @@ using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Conditions;
 using FlaUI.Core;
 
-namespace TestFunctionailty
+namespace TestFuntionality
 {
     [TestClass]
     public class Tests
@@ -12,7 +12,6 @@ namespace TestFunctionailty
         public required ConditionFactory cf;
         public required FlaUI.Core.Application app;
         public required Window window;
-        public required IList<Window> allWindows;
 
         [TestInitialize]
         public void Setup()
@@ -20,9 +19,7 @@ namespace TestFunctionailty
             app = Application.Launch(appPath);
             var mainWindow = app.GetMainWindow(new UIA3Automation());
             window = (mainWindow != null) ? mainWindow : throw new Exception("mainWindow is not defined");
-            allWindows = app.GetAllTopLevelWindows(new UIA3Automation());
             cf = new ConditionFactory(new UIA3PropertyLibrary());
-
         }
 
         [TestMethod]

@@ -15,6 +15,9 @@ Pdfs/
 # Installatiion folder
 CaféBullenPOSInstall/
 
+PointOfSale/Databases/*
+!PointOfSale/Databases/.gitkeep
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
