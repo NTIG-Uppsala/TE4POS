@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.IO;
-using System.Net.NetworkInformation;
 using static TE4POS.MainWindow;
 
 namespace TE4POS
@@ -10,9 +9,6 @@ namespace TE4POS
     {
         private static readonly string dbFilePath = @"..\..\..\..\..\TE4POS\PointOfSale\Databases\Database.db";
         private static readonly string connectionString = @"Data Source=..\..\..\..\..\TE4POS\PointOfSale\Databases\Database.db;Version=3";
-
-        private static readonly string dbTestFilePath = @"..\..\..\..\..\TE4POS\PointOfSale\Databases\TestDatabase.db";
-        private static readonly string testConnectionString = @"Data Source=..\..\..\..\..\TE4POS\PointOfSale\Databases\TestDatabase.db;Version=3";
 
         public static void InitializeDatabase()
         {
@@ -70,67 +66,6 @@ namespace TE4POS
                 AddProducts(connectionString);
                 //AddReceipts();
             }
-            
-            {
-                InitializeTestDatabase();
-            }
-        }
-
-        public static void InitializeTestDatabase()
-        {
-            if (File.Exists(dbTestFilePath)) {
-                File.Delete(dbTestFilePath);
-            }
-            SQLiteConnection.CreateFile(dbTestFilePath);
-            using (var connection = new SQLiteConnection(testConnectionString))
-            {
-                connection.Open();
-
-                // Creates the tables
-                string createProductsQuery = @"
-                    CREATE TABLE IF NOT EXISTS Products (
-                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        Name TEXT NOT NULL,
-                        Price INTEGER NOT NULL,
-                        Category TEXT NOT NULL,
-                        Stock INTEGER NOT NULL
-                    )";
-
-                string createReceiptsQuery = @"
-                    CREATE TABLE IF NOT EXISTS Receipts (
-                        ReceiptNumber INTEGER PRIMARY KEY AUTOINCREMENT,
-                        ArticleCount INTEGER NOT NULL,
-                        ReceiptTotal INTEGER NOT NULL,
-                        Subtotal FLOAT NOT NULL,
-                        Saletax FLOAT NOT NULL,
-                        Time TEXT NOT NULL
-                    )";
-
-                string createReceiptProductsQuery = @"
-                    CREATE TABLE IF NOT EXISTS ReceiptProducts(
-                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        ReceiptNumber INTEGER NOT NULL,
-                        ProductId INTEGER NOT NULL,
-                        Quantity INTEGER NOT NULL,
-                        UnitPrice INTEGER NOT NULL,
-                        TotalPrice INTEGER NOT NULL,
-                        FOREIGN KEY (ReceiptNumber) REFERENCES Receipts(ReceiptNumber),
-                        FOREIGN KEY (ProductId) REFERENCES Products(Id)
-                    )";
-
-                using (var command = new SQLiteCommand(connection))
-                {
-                    command.CommandText = createProductsQuery;
-                    command.ExecuteNonQuery();
-
-                    command.CommandText = createReceiptsQuery;
-                    command.ExecuteNonQuery();
-
-                    command.CommandText = createReceiptProductsQuery;
-                    command.ExecuteNonQuery();
-                }
-            }
-            AddProducts(testConnectionString);
         }
 
         public static void AddProducts(string connectionString)
@@ -279,20 +214,25 @@ namespace TE4POS
                 }
             }
         }
-        public static int GetCurrentReceiptNumber(SQLiteConnection connection)
+        public static int GetCurrentReceiptNumber()
         {
             string query = "SELECT MAX(ReceiptNumber) FROM Receipts";
-
-            using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
-                object result = cmd.ExecuteScalar();
-                if (result != DBNull.Value && result != null)
+                connection.Open();
+
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
                 {
-                    return Convert.ToInt32(result);
-                }
-                else
-                {
-                    return 0;
+                    object result = cmd.ExecuteScalar();
+                    if (result != DBNull.Value && result != null)
+                    {
+                        int temp = Convert.ToInt32(result);
+                        return temp;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
                 }
             }
         }
