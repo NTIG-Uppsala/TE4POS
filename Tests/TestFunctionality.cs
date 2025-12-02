@@ -1,7 +1,8 @@
-﻿using FlaUI.UIA3;
+﻿using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Conditions;
-using FlaUI.Core;
+using FlaUI.Core.Tools;
+using FlaUI.UIA3;
 
 namespace TestFuntionality
 {
@@ -154,6 +155,54 @@ namespace TestFuntionality
 
             Assert.AreEqual("Cappuccino", receiptItem1AsText.Name);
             Assert.AreEqual("Latte", receiptItem2AsText.Name);
+        }
+
+        [TestMethod]
+        public void CreateReceiptWithNoItems()
+        {
+            var checkoutElement = window.FindFirstDescendant(cf.ByAutomationId("Finish"));
+            var receiptElement = window.FindFirstDescendant(cf.ByName("Kvitton"));
+            var checkoutBtn = checkoutElement.AsButton();
+            var receiptBtn = receiptElement.AsButton();
+
+            checkoutBtn.Click();
+            receiptBtn.Click();
+
+            var noReceiptsElement = window.FindFirstDescendant(cf.ByText("Inga kvitton hittades."));
+            var noReceiptsAsText = noReceiptsElement.AsTextBox();
+            Assert.AreEqual("Inga kvitton hittades.", noReceiptsAsText.Name);
+        }
+
+        [TestMethod]
+        public void ErrorPopupOpeningOldReceipts()
+        {
+            var itemElement = window.FindFirstDescendant(cf.ByText("Cappuccino"));
+            var checkoutElement = window.FindFirstDescendant(cf.ByAutomationId("Finish"));
+            var itemBtn = itemElement.AsButton();
+            var checkoutBtn = checkoutElement.AsButton();
+
+            itemBtn.Click();
+            itemBtn.Click();
+            checkoutBtn.Click();
+
+            var receiptTab = window.FindFirstDescendant(cf.ByName("Kvitton"));
+            var receiptTabBtn = receiptTab.AsButton();
+            receiptTabBtn.Click();
+
+            var receiptElement = window.FindFirstDescendant(cf.ByName("TE4POS.MainWindow+Receipt"));
+            var receiptBtn = receiptElement.AsButton();
+            receiptBtn.Click();
+
+            Thread.Sleep(100); // Wait, incase it takes time for the popup to appear
+
+            var errorPopup = window.FindFirstDescendant(cf.ByAutomationId("CommandButton_1"));
+            var errorPopupBtn = errorPopup.AsButton();
+            if (errorPopupBtn != null)
+            {
+                errorPopupBtn.Click();
+            }
+            
+            Assert.IsNull(errorPopup);
         }
 
         [TestCleanup]

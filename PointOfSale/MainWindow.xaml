@@ -138,7 +138,7 @@
                         <ItemsControl Grid.Column="0" ItemsSource="{Binding ReceiptList}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button Height="50" Click="Receipt_Click" Tag="{Binding receiptNumber}">
+                                    <Button Height="50" Click="Receipt_Click" Tag="{Binding receiptNumber}" x:Name="Receipt">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>

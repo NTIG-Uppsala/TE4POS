@@ -10,11 +10,10 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
-using TE4POS;
 using static TE4POS.MainWindow;
 using ProductsRepository;
 using ReceiptsRepository;
+using System.Diagnostics;
 
 namespace TE4POS
 {
@@ -162,8 +161,8 @@ namespace TE4POS
             ShoppingCart.Clear();
             ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
 
-            int temp = DatabaseHelper.GetCurrentReceiptNumber();
-            generateReceiptPDF(currentReceipt.PDFFormatedTime, temp);
+            int receiptNumber = DatabaseHelper.GetCurrentReceiptNumber();
+            generateReceiptPDF(currentReceipt.PDFFormatedTime, receiptNumber);
         }
 
         System.Windows.Controls.WebBrowser browser = new System.Windows.Controls.WebBrowser();
@@ -175,7 +174,8 @@ namespace TE4POS
 
             foreach(Receipt receipt in ReceiptList)
             {
-                if(receipt.receiptNumber == thisReceipt)
+                
+                if (receipt.receiptNumber == thisReceipt)
                 {
                     string thisReceiptTime = receipt.PDFFormatedTime;
                     string filename = $"{thisReceiptTime}_{thisReceipt}.pdf";
@@ -197,8 +197,6 @@ namespace TE4POS
 
             var pdf = new ReceiptPdf(receipt);
             byte[] pdfBytes = await System.Threading.Tasks.Task.Run(() => pdf.GeneratePdf());
-
-            //pdf.ShowInCompanion();
 
             string safetime = dateAndTime;
             string filename = $"{safetime}_{receiptNumber}.pdf";

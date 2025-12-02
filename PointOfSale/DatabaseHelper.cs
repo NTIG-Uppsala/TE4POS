@@ -226,8 +226,8 @@ namespace TE4POS
                     object result = cmd.ExecuteScalar();
                     if (result != DBNull.Value && result != null)
                     {
-                        int temp = Convert.ToInt32(result);
-                        return temp;
+                        int intResult = Convert.ToInt32(result);
+                        return intResult;
                     }
                     else
                     {
