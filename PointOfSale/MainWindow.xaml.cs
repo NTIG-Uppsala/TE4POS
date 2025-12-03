@@ -3,17 +3,15 @@ using QuestPDF.Drawing;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using static TE4POS.MainWindow;
 using ProductsRepository;
 using ReceiptsRepository;
-using System.Diagnostics;
+using static TE4POS.MainWindow;
 
 namespace TE4POS
 {
@@ -101,68 +99,71 @@ namespace TE4POS
 
         private async void Checkout_Click(object sender, RoutedEventArgs e)
         {
-            var time = DateTime.Now;
-
-            // Had to be = 0 otherwise things wouldn't work for some reason
-            int receiptArticleCount = 0;
-            int receiptTotalCost = 0;
-
-            // Makes a new receipt object
-            var currentReceipt = new Receipt { };
-
-            // Adds each item in the cart to the receipt
-            foreach (CartItem item in ShoppingCart)
+            if (ShoppingCart.Count != 0)
             {
-                // Finds name, price, and how many of the item is int the cart
-                string receiptProductName = item.Name;
-                int receiptProductPrice = item.Price;
-                int receiptProductAmount = item.Amount;
+                var time = DateTime.Now;
 
-                // Adds a total price based on item price and amount
-                int totalProductAmountPrice = receiptProductPrice * receiptProductAmount;
+                // Had to be = 0 otherwise things wouldn't work for some reason
+                int receiptArticleCount = 0;
+                int receiptTotalCost = 0;
 
-                // Puts all of the cart items info into one object
-                var receiptProduct = new ReceiptProduct
+                // Makes a new receipt object
+                var currentReceipt = new Receipt { };
+
+                // Adds each item in the cart to the receipt
+                foreach (CartItem item in ShoppingCart)
                 {
-                    receiptName = receiptProductName,
-                    receiptPrice = receiptProductPrice,
-                    receiptAmount = receiptProductAmount,
-                    receiptProductTotal = totalProductAmountPrice,
-                };
-                // Adds the item object to the receipt
-                currentReceipt.ReceiptProducts.Add(receiptProduct);
+                    // Finds name, price, and how many of the item is int the cart
+                    string receiptProductName = item.Name;
+                    int receiptProductPrice = item.Price;
+                    int receiptProductAmount = item.Amount;
 
-                // Adds the number of articles to the total number of articles in the receipt
-                receiptArticleCount += receiptProductAmount;
-                // Adds the price to the total receipt price
-                receiptTotalCost += totalProductAmountPrice;
-            }
+                    // Adds a total price based on item price and amount
+                    int totalProductAmountPrice = receiptProductPrice * receiptProductAmount;
 
-            // Adds the current time, article count, and total price to the receipt
-            currentReceipt.Time = time.ToString("yyyy-MM-dd HH:mm:ss");
-            currentReceipt.PDFFormatedTime = time.ToString("yyyyMMdd_HHmmss_");
-            currentReceipt.articleCount = receiptArticleCount;
-            currentReceipt.receiptTotal = receiptTotalCost;
+                    // Puts all of the cart items info into one object
+                    var receiptProduct = new ReceiptProduct
+                    {
+                        receiptName = receiptProductName,
+                        receiptPrice = receiptProductPrice,
+                        receiptAmount = receiptProductAmount,
+                        receiptProductTotal = totalProductAmountPrice,
+                    };
+                    // Adds the item object to the receipt
+                    currentReceipt.ReceiptProducts.Add(receiptProduct);
 
-            // VAT Calculations 
-            double beforeVAT = Math.Round(receiptTotalCost / VAT, 2);
-            currentReceipt.subtotal = beforeVAT;
-            currentReceipt.saleTax = Math.Round(receiptTotalCost - beforeVAT, 2);
+                    // Adds the number of articles to the total number of articles in the receipt
+                    receiptArticleCount += receiptProductAmount;
+                    // Adds the price to the total receipt price
+                    receiptTotalCost += totalProductAmountPrice;
+                }
+
+                // Adds the current time, article count, and total price to the receipt
+                currentReceipt.Time = time.ToString("yyyy-MM-dd HH:mm:ss");
+                currentReceipt.PDFFormatedTime = time.ToString("yyyyMMdd_HHmmss_");
+                currentReceipt.articleCount = receiptArticleCount;
+                currentReceipt.receiptTotal = receiptTotalCost;
+
+                // VAT Calculations 
+                double beforeVAT = Math.Round(receiptTotalCost / VAT, 2);
+                currentReceipt.subtotal = beforeVAT;
+                currentReceipt.saleTax = Math.Round(receiptTotalCost - beforeVAT, 2);
             
-            DatabaseHelper.AddReceipt(currentReceipt);
+                DatabaseHelper.AddReceipt(currentReceipt);
 
-            // Adds the receipt to the receipt list
-            ReceiptList.Add(currentReceipt);
+                // Adds the receipt to the receipt list
+                ReceiptList.Add(currentReceipt);
 
-            // Updates the stock in the database
-            DatabaseHelper.RemoveStock(ShoppingCart);
+                // Updates the stock in the database
+                DatabaseHelper.RemoveStock(ShoppingCart);
 
-            // Clears cart and cart price total for next order
-            ShoppingCart.Clear();
-            ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
+                // Clears cart and cart price total for next order
+                ShoppingCart.Clear();
+                ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
 
-            int receiptNumber = DatabaseHelper.GetCurrentReceiptNumber();
-            generateReceiptPDF(currentReceipt.PDFFormatedTime, receiptNumber);
+                int receiptNumber = DatabaseHelper.GetCurrentReceiptNumber();
+                generateReceiptPDF(currentReceipt.PDFFormatedTime, receiptNumber);
+            }
         }
 
         System.Windows.Controls.WebBrowser browser = new System.Windows.Controls.WebBrowser();
@@ -232,7 +233,7 @@ namespace TE4POS
         {
 
         }
-
+        
         public Product(string name, string category, int price)
         {
             Name = name;

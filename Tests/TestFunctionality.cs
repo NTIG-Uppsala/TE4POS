@@ -168,9 +168,16 @@ namespace TestFuntionality
             checkoutBtn.Click();
             receiptBtn.Click();
 
-            var noReceiptsElement = window.FindFirstDescendant(cf.ByText("Inga kvitton hittades."));
-            var noReceiptsAsText = noReceiptsElement.AsTextBox();
-            Assert.AreEqual("Inga kvitton hittades.", noReceiptsAsText.Name);
+            var emptyReceiptElement = window.FindFirstDescendant(cf.ByText("0.00"));
+            var emptyReceipt = emptyReceiptElement.AsTextBox();
+            if (emptyReceipt == null)
+            {
+                return;
+            } 
+            else
+            {
+                Assert.AreNotEqual("0.00", emptyReceipt.Name);
+            }
         }
 
         [TestMethod]
