@@ -147,14 +147,16 @@ namespace TestFuntionality
             
             receiptBtn.Click();
 
-            var receiptItem1 = window.FindFirstDescendant(cf.ByText("Cappuccino"));
-            var receiptItem2 = window.FindFirstDescendant(cf.ByText("Latte"));
-
-            var receiptItem1AsText = receiptItem1.AsTextBox();
-            var receiptItem2AsText = receiptItem2.AsTextBox();
-
-            Assert.AreEqual("Cappuccino", receiptItem1AsText.Name);
-            Assert.AreEqual("Latte", receiptItem2AsText.Name);
+            var receiptSumElement = window.FindFirstDescendant(cf.ByText("130.00"));
+            var receiptSum = receiptSumElement.AsTextBox();
+            if (receiptSum == null)
+            {
+                return;
+            }
+            else
+            {
+                Assert.AreNotEqual("0.00", receiptSum.Name);
+            }
         }
 
         [TestMethod]

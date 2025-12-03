@@ -160,9 +160,6 @@ namespace TE4POS
                 // Clears cart and cart price total for next order
                 ShoppingCart.Clear();
                 ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
-
-                int receiptNumber = DatabaseHelper.GetCurrentReceiptNumber();
-                generateReceiptPDF(currentReceipt.PDFFormatedTime, receiptNumber);
             }
         }
 
@@ -173,11 +170,12 @@ namespace TE4POS
             showReceipt.Children.Clear();
             int thisReceipt = int.Parse(((Button)sender).Tag.ToString());
 
-            foreach(Receipt receipt in ReceiptList)
+            foreach (Receipt receipt in ReceiptList)
             {
-                
                 if (receipt.receiptNumber == thisReceipt)
                 {
+                    generateReceiptPDF(receipt.PDFFormatedTime, receipt.receiptNumber);
+
                     string thisReceiptTime = receipt.PDFFormatedTime;
                     string filename = $"{thisReceiptTime}_{thisReceipt}.pdf";
 
@@ -190,24 +188,25 @@ namespace TE4POS
                     showReceipt.Opacity = 200;
                 }
             }
+            
+
         }
 
-        public async void generateReceiptPDF(string dateAndTime , int receiptNumber)
+        public void generateReceiptPDF(string dateAndTime , int receiptNumber)
         {
             var receipt = ReceiptList[receiptNumber-1];
 
             var pdf = new ReceiptPdf(receipt);
-            byte[] pdfBytes = await System.Threading.Tasks.Task.Run(() => pdf.GeneratePdf());
+            byte[] pdfBytes = pdf.GeneratePdf();
 
-            string safetime = dateAndTime;
-            string filename = $"{safetime}_{receiptNumber}.pdf";
+            string filename = $"{dateAndTime}_{receiptNumber}.pdf";
             string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"));
             string directory = Path.Combine(projectRoot, "Pdfs");
             string filePath = Path.Combine(directory, filename);
 
             Directory.CreateDirectory(directory);
+            File.WriteAllBytesAsync(filePath, pdfBytes);
             
-            await File.WriteAllBytesAsync(filePath, pdfBytes);
         }
 
 

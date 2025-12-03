@@ -36,6 +36,7 @@ namespace TE4POS
                         ReceiptTotal INTEGER NOT NULL,
                         Subtotal FLOAT NOT NULL,
                         Saletax FLOAT NOT NULL,
+                        PdfFormattedTime TEXT NOT NULL,
                         Time TEXT NOT NULL
                     )";
 
@@ -149,8 +150,8 @@ namespace TE4POS
                 connection.Open();
 
                 string insertReceiptQuery = @"
-                INSERT INTO Receipts (Time, ArticleCount, ReceiptTotal, Subtotal, Saletax)
-                VALUES (@time, @articleCount, @receiptTotal, @subtotal, @saletax)";
+                INSERT INTO Receipts (Time, ArticleCount, ReceiptTotal, Subtotal, Saletax, PdfFormattedTime)
+                VALUES (@time, @articleCount, @receiptTotal, @subtotal, @saletax, @pdfFormattedTime)";
 
                 using (var cmd = new SQLiteCommand(insertReceiptQuery, connection))
                 {
@@ -159,6 +160,7 @@ namespace TE4POS
                     cmd.Parameters.AddWithValue("@receiptTotal", receipt.receiptTotal);
                     cmd.Parameters.AddWithValue("@subtotal", receipt.subtotal);
                     cmd.Parameters.AddWithValue("@saletax", receipt.saleTax);
+                    cmd.Parameters.AddWithValue("@pdfFormattedTime", receipt.PDFFormatedTime);
 
                     cmd.ExecuteNonQuery();
 
@@ -232,6 +234,28 @@ namespace TE4POS
                     else
                     {
                         return 0;
+                    }
+                }
+            }
+        }
+
+        public static string GetPdfFormattedTime(int receiptNumber)
+        {
+            string query = "SELECT PdfFormattedTime FROM Receipts WHERE ReceiptNumber = @receiptNumber";
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@receiptNumber", receiptNumber);
+                    object result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        return result.ToString();
+                    }
+                    else
+                    {
+                        throw new Exception("Receipt not found");
                     }
                 }
             }

@@ -37,6 +37,7 @@ namespace ReceiptsRepository
                             receiptTotal = reader.GetInt32(reader.GetOrdinal("ReceiptTotal")),
                             subtotal = reader.GetFloat(reader.GetOrdinal("Subtotal")),
                             saleTax = reader.GetFloat(reader.GetOrdinal("SaleTax")),
+                            PDFFormatedTime = reader.GetString(reader.GetOrdinal("PdfFormattedTime")),
                             Time = reader.GetString(reader.GetOrdinal("Time"))
                         });
                     }
