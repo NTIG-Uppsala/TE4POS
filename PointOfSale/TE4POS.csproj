@@ -9,12 +9,91 @@
   </PropertyGroup>
 	
   <ItemGroup>
+    <Compile Remove="LatoFont\**" />
+    <EmbeddedResource Remove="LatoFont\**" />
+    <None Remove="LatoFont\**" />
+    <Page Remove="LatoFont\**" />
+  </ItemGroup>
+	
+  <ItemGroup>
     <PackageReference Include="QuestPDF" Version="2025.7.4" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
   </ItemGroup>
 	
   <ItemGroup>
-    <Folder Include="Pdfs\" />
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\OFL.txt" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-ThinItalic.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-Thin.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-SemiBoldItalic.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-SemiBold.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-Regular.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-MediumItalic.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-Medium.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-LightItalic.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-Light.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-Italic.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-ExtraLightItalic.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-ExtraLight.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-ExtraBoldItalic.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-ExtraBold.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-BoldItalic.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-Bold.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-BlackItalic.ttf" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Remove="C:\Users\linus.elistewester\.nuget\packages\questpdf\2025.7.4\buildTransitive\..\LatoFont\Lato-Black.ttf" />
   </ItemGroup>
 
 </Project>

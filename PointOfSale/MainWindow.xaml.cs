@@ -12,6 +12,7 @@ using System.Windows.Controls;
 using ProductsRepository;
 using ReceiptsRepository;
 using static TE4POS.MainWindow;
+using System.Diagnostics;
 
 namespace TE4POS
 {
@@ -163,7 +164,7 @@ namespace TE4POS
             }
         }
 
-        System.Windows.Controls.WebBrowser browser = new System.Windows.Controls.WebBrowser();
+        WebBrowser browser = new WebBrowser();
 
         private void Receipt_Click(object sender, RoutedEventArgs e)
         {
@@ -179,8 +180,13 @@ namespace TE4POS
                     string thisReceiptTime = receipt.PDFFormatedTime;
                     string filename = $"{thisReceiptTime}_{thisReceipt}.pdf";
 
-                    string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"));
+                    string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
                     string directory = Path.Combine(projectRoot, "Pdfs");
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+
                     string filePath = Path.Combine(directory, filename);
 
                     showReceipt.Children.Add(browser);
@@ -200,13 +206,12 @@ namespace TE4POS
             byte[] pdfBytes = pdf.GeneratePdf();
 
             string filename = $"{dateAndTime}_{receiptNumber}.pdf";
-            string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\"));
+            string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
             string directory = Path.Combine(projectRoot, "Pdfs");
             string filePath = Path.Combine(directory, filename);
 
             Directory.CreateDirectory(directory);
             File.WriteAllBytesAsync(filePath, pdfBytes);
-            
         }
 
 
