@@ -133,7 +133,6 @@ namespace TE4POS
                     // Adds the price to the total receipt price
                     receiptTotalCost += totalProductAmountPrice;
                 }
-
                 // Adds the current time, article count, and total price to the receipt
                 currentReceipt.time = time.ToString("yyyy-MM-dd HH:mm:ss");
                 currentReceipt.PDFFormattedTime = time.ToString("yyyyMMdd_HHmmss_");
@@ -222,7 +221,6 @@ namespace TE4POS
                     return string.Format("{0:F}", price);
                 }
             }
-
             // Parameterless constructor for derived classes
             public Product()
             {
