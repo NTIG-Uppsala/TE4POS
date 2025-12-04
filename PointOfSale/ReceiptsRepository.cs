@@ -14,7 +14,8 @@ namespace ReceiptsRepository
         public ObservableCollection<Receipt> AllReceipts { get; private set; }
             = new ObservableCollection<Receipt>();
 
-        private string connectionString = @"Data Source=..\..\..\..\..\TE4POS\PointOfSale\Databases\Database.db;Version=3";
+        private static readonly string filePath = "Databases/Database.db";
+        private static readonly string connectionString = @"Data Source=" + filePath + ";Version=3";
 
         public IEnumerable<Receipt> GetAllReceipts()
         {

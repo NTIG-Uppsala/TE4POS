@@ -14,7 +14,8 @@ namespace ProductsRepository
         public ObservableCollection<Product> AllProducts { get; private set; }
             = new ObservableCollection<Product>();
 
-        private string connectionString = @"Data Source=..\..\..\..\..\TE4POS\PointOfSale\Databases\Database.db;Version=3";
+        private static readonly string filePath = "Databases/Database.db";
+        private static readonly string connectionString = @"Data Source=" + filePath + ";Version=3";
 
         public IEnumerable<Product> GetAllProducts()
         {

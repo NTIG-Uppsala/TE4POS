@@ -1,13 +1,12 @@
 ﻿using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Conditions;
-using FlaUI.Core.Tools;
 using FlaUI.UIA3;
 
-namespace TestFuntionality
+namespace Tests
 {
     [TestClass]
-    public class Tests
+    public class TestFunctionality
     {
         private string appPath = Path.GetFullPath(@"..\..\..\..\PointOfSale\bin\Debug\net9.0-windows\TE4POS.exe");
         public required ConditionFactory cf;

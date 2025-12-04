@@ -7,15 +7,16 @@ namespace TE4POS
 {
     public static class DatabaseHelper
     {
-        private static readonly string dbFilePath = @"..\..\..\..\..\TE4POS\PointOfSale\Databases\Database.db";
-        private static readonly string connectionString = @"Data Source=..\..\..\..\..\TE4POS\PointOfSale\Databases\Database.db;Version=3";
+        private static readonly string filePath = "Databases/Database.db";
+        private static readonly string connectionString = @"Data Source=" + filePath + ";Version=3";
 
         public static void InitializeDatabase()
         {
-            // Creates a new local database if none exists
-            if (!File.Exists(dbFilePath))
+            if (!File.Exists(filePath))
             {
-                SQLiteConnection.CreateFile(dbFilePath);
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+
+                SQLiteConnection.CreateFile(filePath);
                 using (var connection = new SQLiteConnection(connectionString))
                 {
                     connection.Open();
