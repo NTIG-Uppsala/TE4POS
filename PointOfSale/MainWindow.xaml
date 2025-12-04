@@ -158,8 +158,8 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </ScrollViewer>
-                    <Button HorizontalAlignment="Left" Width="300" Height="40" Grid.Column="0" Grid.Row="1" Background="#FFE8E800" Click="OpenReceiptFolder_Click">Kvitto mapp</Button>
-                    <Grid x:Name="showReceipt" VerticalAlignment="Top" Grid.RowSpan="2" Grid.Column="2"/>
+                    <Button HorizontalAlignment="Left" Width="300" Height="40" Grid.Column="0" Grid.Row="1" Background="#FFE8E800" Click="OpenReceiptFolderClick">Kvitto mapp</Button>
+                    <Grid x:Name="ShowReceipt" VerticalAlignment="Top" Grid.RowSpan="2" Grid.Column="2"/>
                 </Grid>
             </TabItem>
         </TabControl>
