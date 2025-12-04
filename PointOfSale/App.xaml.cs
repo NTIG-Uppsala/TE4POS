@@ -1,15 +1,15 @@
 ﻿using QuestPDF;
 using QuestPDF.Infrastructure;
-using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace TE4POS
 {
     public partial class App : Application
     {
+        public static bool isTest = false;
         protected override void OnStartup(StartupEventArgs e)
         {
-            QuestPDF.Settings.License = LicenseType.Community;
+            Settings.License = LicenseType.Community;
 
             base.OnStartup(e);
         }

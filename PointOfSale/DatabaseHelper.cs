@@ -7,31 +7,55 @@ namespace TE4POS
 {
     public static class DatabaseHelper
     {
+
         private static readonly string filePath = "Databases/Database.db";
         private static readonly string connectionString = @"Data Source=" + filePath + ";Version=3";
 
+        private static readonly string testFilePath = "Databases/TestDatabase.db";
+        private static readonly string testConnectionString = @"Data Source=" + testFilePath + ";Version=3";
+
+        public static string currentConnectionString = "";
+
+        public static string GetConnectionString()
+        {
+            if (App.isTest)
+            {
+                currentConnectionString = testConnectionString;
+            }
+            else
+            {
+                currentConnectionString = connectionString;
+            }
+            return currentConnectionString;
+        }
         public static void InitializeDatabase()
         {
-            if (!File.Exists(filePath))
+            if (App.isTest)
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-
-                SQLiteConnection.CreateFile(filePath);
-                using (var connection = new SQLiteConnection(connectionString))
+                return;
+            }
+            else
+            {
+                if (!File.Exists(filePath))
                 {
-                    connection.Open();
+                    Directory.CreateDirectory(Path.GetDirectoryName(filePath));
 
-                    // Creates the database tables
-                    string createProductsQuery = @"
+                    SQLiteConnection.CreateFile(filePath);
+                    using (var connection = new SQLiteConnection(GetConnectionString()))
+                    {
+                        connection.Open();
+
+                        // Creates the database tables
+                        string createProductsQuery = @"
                     CREATE TABLE IF NOT EXISTS Products (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         Name TEXT NOT NULL,
                         Price INTEGER NOT NULL,
                         Category TEXT NOT NULL,
                         Stock INTEGER NOT NULL
-                    )"; 
-                    
-                    string createReceiptsQuery = @"
+                    )";
+
+                        string createReceiptsQuery = @"
                     CREATE TABLE IF NOT EXISTS Receipts (
                         ReceiptNumber INTEGER PRIMARY KEY AUTOINCREMENT,
                         ArticleCount INTEGER NOT NULL,
@@ -42,7 +66,7 @@ namespace TE4POS
                         Time TEXT NOT NULL
                     )";
 
-                    string createReceiptProductsQuery = @"
+                        string createReceiptProductsQuery = @"
                     CREATE TABLE IF NOT EXISTS ReceiptProducts(
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         ReceiptNumber INTEGER NOT NULL,
@@ -54,19 +78,20 @@ namespace TE4POS
                         FOREIGN KEY (ProductId) REFERENCES Products(Id)
                     )";
 
-                    using (var command = new SQLiteCommand(connection))
-                    {
-                        command.CommandText = createProductsQuery;
-                        command.ExecuteNonQuery();
+                        using (var command = new SQLiteCommand(connection))
+                        {
+                            command.CommandText = createProductsQuery;
+                            command.ExecuteNonQuery();
 
-                        command.CommandText = createReceiptsQuery;
-                        command.ExecuteNonQuery();
+                            command.CommandText = createReceiptsQuery;
+                            command.ExecuteNonQuery();
 
-                        command.CommandText = createReceiptProductsQuery;
-                        command.ExecuteNonQuery();
+                            command.CommandText = createReceiptProductsQuery;
+                            command.ExecuteNonQuery();
+                        }
                     }
+                    AddProducts(GetConnectionString());
                 }
-                AddProducts(connectionString);
             }
         }
 
@@ -100,7 +125,7 @@ namespace TE4POS
                 new { Name = "Panini (kyckling & pesto)", Price = 58, Category = "Enkel mat", Stock = 100 },
                 new { Name = "Soppa med bröd", Price = 65, Category = "Enkel mat", Stock = 100 },
                 new { Name = "Quinoasallad", Price = 72, Category = "Enkel mat", Stock = 100 },
-            }; //List of all products to add into the database
+            };
 
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
@@ -130,7 +155,7 @@ namespace TE4POS
 
         public static void RemoveStock(ObservableCollection<CartItem> allItems)
         {
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            using (SQLiteConnection connection = new SQLiteConnection(GetConnectionString()))
             {
                 connection.Open();
                 foreach (var item in allItems)
@@ -146,7 +171,7 @@ namespace TE4POS
 
         public static void AddReceipt(Receipt receipt)
         {
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            using (SQLiteConnection connection = new SQLiteConnection(GetConnectionString()))
             {
                 connection.Open();
 
@@ -171,7 +196,7 @@ namespace TE4POS
             }
 
             // Insert receipt products
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            using (SQLiteConnection connection = new SQLiteConnection(GetConnectionString()))
             {
                 connection.Open();
                 foreach (var item in receipt.receiptProducts)
@@ -196,7 +221,7 @@ namespace TE4POS
         {
             string selectProductIdQuery = "SELECT Id FROM Products WHERE Name = @productName";
 
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            using (SQLiteConnection connection = new SQLiteConnection(GetConnectionString()))
             {
                 connection.Open();
                 using (SQLiteCommand cmd = new SQLiteCommand(selectProductIdQuery, connection))
@@ -220,7 +245,7 @@ namespace TE4POS
         public static int GetCurrentReceiptNumber()
         {
             string query = "SELECT MAX(ReceiptNumber) FROM Receipts";
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            using (SQLiteConnection connection = new SQLiteConnection(GetConnectionString()))
             {
                 connection.Open();
 
@@ -243,7 +268,7 @@ namespace TE4POS
         public static string GetPdfFormattedTime(int receiptNumber)
         {
             string query = "SELECT PdfFormattedTime FROM Receipts WHERE ReceiptNumber = @receiptNumber";
-            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            using (SQLiteConnection connection = new SQLiteConnection(GetConnectionString()))
             {
                 connection.Open();
                 using (SQLiteCommand cmd = new SQLiteCommand(query, connection))

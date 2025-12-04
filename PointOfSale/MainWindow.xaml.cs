@@ -52,8 +52,8 @@ namespace TE4POS
             receiptsRepo.GetAllReceipts();
 
             // bind to the ObservableCollection
-            AllProducts = productsRepo.AllProducts; 
-            ReceiptList = receiptsRepo.AllReceipts; 
+            AllProducts = productsRepo.AllProducts;
+            ReceiptList = receiptsRepo.AllReceipts;
 
             // An empty cart
             ShoppingCart = new ObservableCollection<CartItem> { };
@@ -161,7 +161,7 @@ namespace TE4POS
 
         WebBrowser browser = new WebBrowser();
 
-        private void ReceiptClick(object sender, RoutedEventArgs e)
+        private async void ReceiptClick(object sender, RoutedEventArgs e)
         {
             ShowReceipt.Children.Clear();
             int thisReceipt = int.Parse(((Button)sender).Tag.ToString());
@@ -199,7 +199,7 @@ namespace TE4POS
             byte[] pdfBytes = pdf.GeneratePdf();
 
             string filename = $"{dateAndTime}_{receiptNumber}.pdf";
-            string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
+            string projectRoot = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory);
             string directory = Path.Combine(projectRoot, "Pdfs");
             string filePath = Path.Combine(directory, filename);
 

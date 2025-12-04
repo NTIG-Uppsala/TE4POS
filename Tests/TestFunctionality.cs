@@ -9,17 +9,25 @@ namespace Tests
     public class TestFunctionality
     {
         private string appPath = Path.GetFullPath(@"..\..\..\..\PointOfSale\bin\Debug\net9.0-windows\TE4POS.exe");
-        public required ConditionFactory cf;
-        public required FlaUI.Core.Application app;
+        public required Application app;
         public required Window window;
+        private ConditionFactory cf = new ConditionFactory(new UIA3PropertyLibrary());
 
         [TestInitialize]
         public void Setup()
         {
+            TestHelper.InitializeTestDatabase();
+
+
             app = Application.Launch(appPath);
+            if (app == null)
+            {
+                throw new Exception("Application is not defined");
+            }
+            System.Diagnostics.Debug.WriteLine(app);
             var mainWindow = app.GetMainWindow(new UIA3Automation());
             window = (mainWindow != null) ? mainWindow : throw new Exception("mainWindow is not defined");
-            cf = new ConditionFactory(new UIA3PropertyLibrary());
+
         }
 
         [TestMethod]
@@ -216,6 +224,7 @@ namespace Tests
         [TestCleanup]
         public void Cleanup()
         {
+            TestHelper.DeleteTestDatabase();
             app.Close();
         }
     }
