@@ -32,11 +32,11 @@ namespace ProductsRepository
                     {
                         AllProducts.Add(new Product()
                         {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            Name = reader.GetString(reader.GetOrdinal("Name")),
-                            Price = reader.GetInt32(reader.GetOrdinal("Price")),
-                            Category = reader.GetString(reader.GetOrdinal("Category")),
-                            Stock = reader.GetInt32(reader.GetOrdinal("Stock")),
+                            id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            name = reader.GetString(reader.GetOrdinal("Name")),
+                            price = reader.GetInt32(reader.GetOrdinal("Price")),
+                            category = reader.GetString(reader.GetOrdinal("Category")),
+                            stock = reader.GetInt32(reader.GetOrdinal("Stock")),
                         });
                     }
                 }

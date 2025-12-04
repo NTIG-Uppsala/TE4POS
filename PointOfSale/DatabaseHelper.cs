@@ -12,6 +12,7 @@ namespace TE4POS
 
         public static void InitializeDatabase()
         {
+            // Creates a new local database if none exists
             if (!File.Exists(dbFilePath))
             {
                 SQLiteConnection.CreateFile(dbFilePath);
@@ -19,7 +20,7 @@ namespace TE4POS
                 {
                     connection.Open();
 
-                    // Creates the tables
+                    // Creates the database tables
                     string createProductsQuery = @"
                     CREATE TABLE IF NOT EXISTS Products (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -65,7 +66,6 @@ namespace TE4POS
                     }
                 }
                 AddProducts(connectionString);
-                //AddReceipts();
             }
         }
 
@@ -99,7 +99,7 @@ namespace TE4POS
                 new { Name = "Panini (kyckling & pesto)", Price = 58, Category = "Enkel mat", Stock = 100 },
                 new { Name = "Soppa med bröd", Price = 65, Category = "Enkel mat", Stock = 100 },
                 new { Name = "Quinoasallad", Price = 72, Category = "Enkel mat", Stock = 100 },
-            };
+            }; //List of all products to add into the database
 
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
@@ -134,7 +134,7 @@ namespace TE4POS
                 connection.Open();
                 foreach (var item in allItems)
                 {
-                    string query = $"UPDATE Products SET Stock = Stock - '{item.Amount}' WHERE Name = '{item.Name}'";
+                    string query = $"UPDATE Products SET Stock = Stock - '{item.amount}' WHERE Name = '{item.name}'";
                     using (var cmd = new SQLiteCommand(query, connection))
                     {
                         cmd.ExecuteNonQuery();
@@ -155,12 +155,12 @@ namespace TE4POS
 
                 using (var cmd = new SQLiteCommand(insertReceiptQuery, connection))
                 {
-                    cmd.Parameters.AddWithValue("@time", receipt.Time);
+                    cmd.Parameters.AddWithValue("@time", receipt.time);
                     cmd.Parameters.AddWithValue("@articleCount", receipt.articleCount);
                     cmd.Parameters.AddWithValue("@receiptTotal", receipt.receiptTotal);
                     cmd.Parameters.AddWithValue("@subtotal", receipt.subtotal);
                     cmd.Parameters.AddWithValue("@saletax", receipt.saleTax);
-                    cmd.Parameters.AddWithValue("@pdfFormattedTime", receipt.PDFFormatedTime);
+                    cmd.Parameters.AddWithValue("@pdfFormattedTime", receipt.PDFFormattedTime);
 
                     cmd.ExecuteNonQuery();
 
@@ -173,7 +173,7 @@ namespace TE4POS
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
-                foreach (var item in receipt.ReceiptProducts)
+                foreach (var item in receipt.receiptProducts)
                 {
                     string insertReceiptProductQuery = @"
                     INSERT INTO ReceiptProducts (ReceiptNumber, ProductId, Quantity, UnitPrice, TotalPrice)
