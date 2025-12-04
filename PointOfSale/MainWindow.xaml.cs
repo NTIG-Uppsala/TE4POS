@@ -20,7 +20,6 @@ namespace TE4POS
     public partial class MainWindow : Window
     {
         private SQLiteProductsRepository productsRepo = new SQLiteProductsRepository();
-
         private SQLiteReceiptsRepository receiptsRepo = new SQLiteReceiptsRepository();
 
         // A list of all products available in the store
@@ -34,17 +33,16 @@ namespace TE4POS
 
         public double VAT = 1.12;
 
-        public int ShoppingCartTotalPrice
+        public int shoppingCartTotalPrice
         {
             get
             {
-                return ShoppingCart.Sum(item => item.Price * item.Amount);
+                return ShoppingCart.Sum(item => item.price * item.amount);
             }
         }
 
         public MainWindow()
         {
-            
             InitializeComponent();
 
             // Creates the database file if it doesn't exist
@@ -65,41 +63,38 @@ namespace TE4POS
             DataContext = this;
         }
 
-        private void AddAmount_Click(object sender, RoutedEventArgs e)
+        private void AddAmountClick(object sender, RoutedEventArgs e)
         {
             // Check that the sender is a UI element and that it has a Product as DataContext
             if (sender is FrameworkElement fe && fe.DataContext is Product product)
             {
-
-                var existingItem = ShoppingCart.FirstOrDefault(x => x.Name == product.Name);
+                var existingItem = ShoppingCart.FirstOrDefault(x => x.name == product.name);
 
                 if (existingItem != null)
                 {
-                    existingItem.Amount++;
-
+                    existingItem.amount++;
                 }
                 else
                 {
                     ShoppingCart.Add(new CartItem
                     {
-                        Name = product.Name,
-                        Price = product.Price,
-                        Amount = 1
+                        name = product.name,
+                        price = product.price,
+                        amount = 1
                     });
-                    
                 }
                 // Update the total price (displayed)
-                ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
+                ShoppingCartTotal.Text = shoppingCartTotalPrice.ToString();
             }
         }
 
-        private void ResetCart_Click(object sender, RoutedEventArgs e)
+        private void ResetCartClick(object sender, RoutedEventArgs e)
         {   
             ShoppingCart.Clear();
-            ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
+            ShoppingCartTotal.Text = shoppingCartTotalPrice.ToString();
         }
 
-        private async void Checkout_Click(object sender, RoutedEventArgs e)
+        private async void CheckoutClick(object sender, RoutedEventArgs e)
         {
             if (ShoppingCart.Count != 0)
             {
@@ -116,9 +111,9 @@ namespace TE4POS
                 foreach (CartItem item in ShoppingCart)
                 {
                     // Finds name, price, and how many of the item is int the cart
-                    string receiptProductName = item.Name;
-                    int receiptProductPrice = item.Price;
-                    int receiptProductAmount = item.Amount;
+                    string receiptProductName = item.name;
+                    int receiptProductPrice = item.price;
+                    int receiptProductAmount = item.amount;
 
                     // Adds a total price based on item price and amount
                     int totalProductAmountPrice = receiptProductPrice * receiptProductAmount;
@@ -132,7 +127,7 @@ namespace TE4POS
                         receiptProductTotal = totalProductAmountPrice,
                     };
                     // Adds the item object to the receipt
-                    currentReceipt.ReceiptProducts.Add(receiptProduct);
+                    currentReceipt.receiptProducts.Add(receiptProduct);
 
                     // Adds the number of articles to the total number of articles in the receipt
                     receiptArticleCount += receiptProductAmount;
@@ -141,8 +136,8 @@ namespace TE4POS
                 }
 
                 // Adds the current time, article count, and total price to the receipt
-                currentReceipt.Time = time.ToString("yyyy-MM-dd HH:mm:ss");
-                currentReceipt.PDFFormatedTime = time.ToString("yyyyMMdd_HHmmss_");
+                currentReceipt.time = time.ToString("yyyy-MM-dd HH:mm:ss");
+                currentReceipt.PDFFormattedTime = time.ToString("yyyyMMdd_HHmmss_");
                 currentReceipt.articleCount = receiptArticleCount;
                 currentReceipt.receiptTotal = receiptTotalCost;
 
@@ -161,24 +156,24 @@ namespace TE4POS
 
                 // Clears cart and cart price total for next order
                 ShoppingCart.Clear();
-                ShoppingCartTotal.Text = ShoppingCartTotalPrice.ToString();
+                ShoppingCartTotal.Text = shoppingCartTotalPrice.ToString();
             }
         }
 
         WebBrowser browser = new WebBrowser();
 
-        private void Receipt_Click(object sender, RoutedEventArgs e)
+        private void ReceiptClick(object sender, RoutedEventArgs e)
         {
-            showReceipt.Children.Clear();
+            ShowReceipt.Children.Clear();
             int thisReceipt = int.Parse(((Button)sender).Tag.ToString());
 
             foreach (Receipt receipt in ReceiptList)
             {
                 if (receipt.receiptNumber == thisReceipt)
                 {
-                    generateReceiptPDF(receipt.PDFFormatedTime, receipt.receiptNumber);
+                    GenerateReceiptPDF(receipt.PDFFormattedTime, receipt.receiptNumber);
 
-                    string thisReceiptTime = receipt.PDFFormatedTime;
+                    string thisReceiptTime = receipt.PDFFormattedTime;
                     string filename = $"{thisReceiptTime}_{thisReceipt}.pdf";
 
                     string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
@@ -190,16 +185,14 @@ namespace TE4POS
 
                     string filePath = Path.Combine(directory, filename);
 
-                    showReceipt.Children.Add(browser);
+                    ShowReceipt.Children.Add(browser);
                     browser.Navigate(filePath);
-                    showReceipt.Opacity = 200;
+                    ShowReceipt.Opacity = 200;
                 }
             }
-            
-
         }
 
-        public void generateReceiptPDF(string dateAndTime , int receiptNumber)
+        public void GenerateReceiptPDF(string dateAndTime , int receiptNumber)
         {
             var receipt = ReceiptList[receiptNumber-1];
 
@@ -215,7 +208,7 @@ namespace TE4POS
             File.WriteAllBytesAsync(filePath, pdfBytes);
         }
 
-        public void OpenReceiptFolder_Click(object sender, RoutedEventArgs e)
+        public void OpenReceiptFolderClick(object sender, RoutedEventArgs e)
         {
             string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
             string directory = Path.Combine(projectRoot, "Pdfs");
@@ -230,66 +223,66 @@ namespace TE4POS
                 UseShellExecute = true,
                 Verb = "open"
             });
-
         }
 
 
 
     public class Product
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public string Category { get; set; } = "";
-        public int Stock { get; set; }
-        public int Price { get; set; }
+        public int id { get; set; }
+        public string name { get; set; } = "";
+        public string category { get; set; } = "";
+        public int stock { get; set; }
+        public int price { get; set; }
 
-        public string PriceFormatted
-        {
-            get
+            public string priceFormatted
             {
-                return string.Format("{0:F}", Price);
+                get
+                {
+                    return string.Format("{0:F}", price);
+                }
             }
-        }
 
-        // Parameterless constructor for derived classes (CartItem for now)
-        public Product()
-        {
+            // Parameterless constructor for derived classes
+            public Product()
+            {
 
-        }
+            }
         
-        public Product(string name, string category, int price)
-        {
-            Name = name;
-            Category = category;
-            Price = price;
-        }
-    }
-    public class CartItem : Product, INotifyPropertyChanged
-    {
-        private int _amount;
-
-        public int Amount
-        {
-            get => _amount;
-            set
+            public Product(string productName, string productCategory, int productPrice)
             {
-                _amount = value;
-                OnPropertyChanged();
+                name = productName;
+                category = productCategory;
+                price = productPrice;
             }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    
+        public class CartItem : Product, INotifyPropertyChanged
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            private int _amount;
+
+            public int amount
+            {
+                get => _amount;
+                set
+                {
+                    _amount = value;
+                    OnPropertyChanged();
+                }
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            public void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
-    }
 
         public class Receipt
         {
-            public string Time { get; set; } = "";
-            public string PDFFormatedTime { get; set; } = "";
+            public string time { get; set; } = "";
+            public string PDFFormattedTime { get; set; } = "";
             public int receiptNumber { get; set; }
             public int articleCount { get; set; }
             public int receiptTotal { get; set; }
@@ -316,7 +309,7 @@ namespace TE4POS
                     return String.Format("{0:F}", saleTax);
                 }
             }
-            public List<ReceiptProduct> ReceiptProducts { get; set; } = new List<ReceiptProduct>();
+            public List<ReceiptProduct> receiptProducts { get; set; } = new List<ReceiptProduct>();
         }
 
         public class ReceiptProduct
@@ -339,9 +332,9 @@ namespace TE4POS
                     return String.Format("{0:F}", receiptProductTotal);
                 }
             }
-
         }
     }
+
     public class ReceiptPdf : IDocument
     {
         public Receipt Receipt { get; }
@@ -374,7 +367,7 @@ namespace TE4POS
 
                     col.Item().PaddingTop(5).PaddingBottom(5).LineHorizontal(1).LineColor(QuestPDF.Helpers.Colors.Black).LineDashPattern(new float[] { 4f, 4f });
 
-                    col.Item().AlignCenter().Text($"Tid: {Receipt.Time}");
+                    col.Item().AlignCenter().Text($"Tid: {Receipt.time}");
                     col.Item().AlignCenter().Text($"Kvittonr: {Receipt.receiptNumber}");
                     col.Item().AlignCenter().Text($"Kassa: 1");
 
@@ -390,7 +383,7 @@ namespace TE4POS
                             cols.RelativeColumn(2); // Total
                         });
 
-                        foreach (var item in Receipt.ReceiptProducts)
+                        foreach (var item in Receipt.receiptProducts)
                         {
                             table.Cell().Text(item.receiptName);
                             table.Cell().AlignRight().Text($"{item.receiptAmount.ToString()}x");

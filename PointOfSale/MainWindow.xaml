@@ -13,16 +13,16 @@
     <Window.Resources>
         <Style TargetType="Button">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding Category}" Value="Varma drycker">
+                <DataTrigger Binding="{Binding category}" Value="Varma drycker">
                     <Setter Property="Background" Value="Orange"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Category}" Value="Kalla drycker">
+                <DataTrigger Binding="{Binding category}" Value="Kalla drycker">
                     <Setter Property="Background" Value="Cyan"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Category}" Value="Bakverk">
+                <DataTrigger Binding="{Binding category}" Value="Bakverk">
                     <Setter Property="Background" Value="Chartreuse"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding Category}" Value="Enkel mat">
+                <DataTrigger Binding="{Binding category}" Value="Enkel mat">
                     <Setter Property="Background" Value="Lavender"/>
                 </DataTrigger>
             </Style.Triggers>
@@ -45,19 +45,19 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button Click="AddAmount_Click" HorizontalContentAlignment="Stretch" x:Name="productBtn" Width="200" Height="125">
+                                    <Button Click="AddAmountClick" HorizontalContentAlignment="Stretch" x:Name="ProductBtn" Width="200" Height="125">
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition/>
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" Text="{Binding Name}"/>
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" Text="{Binding name}"/>
                                             <Grid Grid.Row="1" HorizontalAlignment="Center">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition/>
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" HorizontalAlignment="Center" Margin="0, 0, 5, 0" Text="{Binding PriceFormatted}"/>
+                                                <TextBlock Grid.Column="0" HorizontalAlignment="Center" Margin="0, 0, 5, 0" Text="{Binding priceFormatted}"/>
                                                 <TextBlock Grid.Column="1" HorizontalAlignment="Center" Text="kr"/>
                                             </Grid>
                                         </Grid>
@@ -92,8 +92,8 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="50"/>
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" FontSize="16" Text="{Binding Name}"/>
-                                            <TextBlock Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 10 0" FontSize="16" Text="{Binding Amount}"/>
+                                            <TextBlock Grid.Column="0" FontSize="16" Text="{Binding name}"/>
+                                            <TextBlock Grid.Column="1" HorizontalAlignment="Right" Margin="0 0 10 0" FontSize="16" Text="{Binding amount}"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -119,8 +119,8 @@
                                     <Label Grid.Row="0" Grid.Column="2" FontSize="16">kr</Label>
                                 </Grid>
                                 
-                                <Button Grid.Row="1" Grid.Column="0" Background="Red" x:Name="Reset" Click="ResetCart_Click">Nollställ</Button>
-                                <Button Grid.Row="1" Grid.Column="1" Background="Green" x:Name="Finish" Click="Checkout_Click">Slutför</Button>
+                                <Button Grid.Row="1" Grid.Column="0" Background="Red" x:Name="Reset" Click="ResetCartClick">Nollställ</Button>
+                                <Button Grid.Row="1" Grid.Column="1" Background="Green" x:Name="Finish" Click="CheckoutClick">Slutför</Button>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -142,14 +142,14 @@
                         <ItemsControl Grid.Column="0" ItemsSource="{Binding ReceiptList}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button Height="50" Click="Receipt_Click" Tag="{Binding receiptNumber}" x:Name="Receipt">
+                                    <Button Height="50" Click="ReceiptClick" Tag="{Binding receiptNumber}" x:Name="Receipt">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock FontSize="20" Grid.Column="0" Margin="5 0" Text="{Binding Time}"/>
+                                            <TextBlock FontSize="20" Grid.Column="0" Margin="5 0" Text="{Binding time}"/>
                                             <TextBlock FontSize="20" Grid.Column="1" Margin="5 0" Text="{Binding receiptNumber}"/>
                                             <TextBlock FontSize="20" Grid.Column="2" Margin="5 0" Text="{Binding receiptTotalFormatted}"/>
                                         </Grid>

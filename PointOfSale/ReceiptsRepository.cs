@@ -38,8 +38,8 @@ namespace ReceiptsRepository
                             receiptTotal = reader.GetInt32(reader.GetOrdinal("ReceiptTotal")),
                             subtotal = reader.GetFloat(reader.GetOrdinal("Subtotal")),
                             saleTax = reader.GetFloat(reader.GetOrdinal("SaleTax")),
-                            PDFFormatedTime = reader.GetString(reader.GetOrdinal("PdfFormattedTime")),
-                            Time = reader.GetString(reader.GetOrdinal("Time"))
+                            PDFFormattedTime = reader.GetString(reader.GetOrdinal("PdfFormattedTime")),
+                            time = reader.GetString(reader.GetOrdinal("Time"))
                         });
                     }
                 }
@@ -58,11 +58,11 @@ namespace ReceiptsRepository
                         if (receipt != null)
                         {
                             // Always create list if null
-                            if (receipt.ReceiptProducts == null)
-                                receipt.ReceiptProducts = new List<ReceiptProduct>();
+                            if (receipt.receiptProducts == null)
+                                receipt.receiptProducts = new List<ReceiptProduct>();
 
                             
-                            receipt.ReceiptProducts.Add(new ReceiptProduct()
+                            receipt.receiptProducts.Add(new ReceiptProduct()
                             {
                                 receiptName = productName,
                                 receiptAmount = reader.GetInt32(reader.GetOrdinal("Quantity")),
