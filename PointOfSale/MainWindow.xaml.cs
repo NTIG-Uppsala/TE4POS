@@ -13,6 +13,7 @@ using ProductsRepository;
 using ReceiptsRepository;
 using static TE4POS.MainWindow;
 using System.Diagnostics;
+using Microsoft.Win32;
 
 namespace TE4POS
 {
@@ -212,6 +213,24 @@ namespace TE4POS
 
             Directory.CreateDirectory(directory);
             File.WriteAllBytesAsync(filePath, pdfBytes);
+        }
+
+        public void OpenReceiptFolder_Click(object sender, RoutedEventArgs e)
+        {
+            string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
+            string directory = Path.Combine(projectRoot, "Pdfs");
+
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
+            // Open folder in Explorer
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = directory,
+                UseShellExecute = true,
+                Verb = "open"
+            });
+
         }
 
 

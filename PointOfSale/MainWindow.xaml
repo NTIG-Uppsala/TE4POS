@@ -129,6 +129,10 @@
 
             <TabItem Header="Kvitton">
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="800"/>
                         <ColumnDefinition Width="*"/>
@@ -154,7 +158,8 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </ScrollViewer>
-                    <Grid x:Name="showReceipt" VerticalAlignment="Top" Grid.Column="2"/>
+                    <Button HorizontalAlignment="Left" Width="300" Height="40" Grid.Column="0" Grid.Row="1" Background="#FFE8E800" Click="OpenReceiptFolder_Click">Kvitto mapp</Button>
+                    <Grid x:Name="showReceipt" VerticalAlignment="Top" Grid.RowSpan="2" Grid.Column="2"/>
                 </Grid>
             </TabItem>
         </TabControl>
