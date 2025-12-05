@@ -174,9 +174,18 @@ namespace TE4POS
 
                     string thisReceiptTime = receipt.PDFFormattedTime;
                     string filename = $"{thisReceiptTime}_{thisReceipt}.pdf";
+                    string projectRoot = AppDomain.CurrentDomain.BaseDirectory;
+                    string directory;
 
-                    string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
-                    string directory = Path.Combine(projectRoot, "Pdfs");
+                    if (App.isTest)
+                    {
+                        directory = Path.Combine(projectRoot, "TestPdfs");
+                    }
+                    else
+                    {
+                        directory = Path.Combine(projectRoot, "Pdfs");
+                    }
+
                     if (!Directory.Exists(directory))
                     {
                         Directory.CreateDirectory(directory);
@@ -191,16 +200,26 @@ namespace TE4POS
             }
         }
 
-        public void GenerateReceiptPDF(string dateAndTime , int receiptNumber)
+        public void GenerateReceiptPDF(string dateAndTime, int receiptNumber)
         {
-            var receipt = ReceiptList[receiptNumber-1];
+            var receipt = ReceiptList[receiptNumber - 1];
 
             var pdf = new ReceiptPdf(receipt);
             byte[] pdfBytes = pdf.GeneratePdf();
 
             string filename = $"{dateAndTime}_{receiptNumber}.pdf";
-            string projectRoot = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory);
-            string directory = Path.Combine(projectRoot, "Pdfs");
+            string projectRoot = AppDomain.CurrentDomain.BaseDirectory;
+            string directory;
+
+            if (App.isTest)
+            {
+                directory = Path.Combine(projectRoot, "TestPdfs");
+            }
+            else
+            {
+                directory = Path.Combine(projectRoot, "Pdfs");
+            }
+
             string filePath = Path.Combine(directory, filename);
 
             Directory.CreateDirectory(directory);
@@ -209,7 +228,7 @@ namespace TE4POS
 
         public void OpenReceiptFolderClick(object sender, RoutedEventArgs e)
         {
-            string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
+            string projectRoot = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory);
             string directory = Path.Combine(projectRoot, "Pdfs");
 
             if (!Directory.Exists(directory))

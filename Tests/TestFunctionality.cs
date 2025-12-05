@@ -3,6 +3,7 @@ using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Conditions;
 using FlaUI.UIA3;
 using System.Data.SQLite;
+using System.Diagnostics;
 
 namespace Tests
 {
@@ -13,14 +14,19 @@ namespace Tests
         public required Application app;
         public required Window window;
         private ConditionFactory cf = new ConditionFactory(new UIA3PropertyLibrary());
+        
 
         [TestInitialize]
         public void Setup()
         {
             TestHelper.InitializeTestDatabase();
 
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.UseShellExecute = false;
+            startInfo.WorkingDirectory = Path.GetFullPath(@"..\\..\\..\\..\\Tests\\bin\\Debug\\net9.0-windows");
+            startInfo.FileName = appPath;
 
-            app = Application.Launch(appPath);
+            app = Application.Launch(startInfo);
             if (app == null)
             {
                 throw new Exception("Application is not defined");
