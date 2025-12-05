@@ -13,6 +13,7 @@ using ProductsRepository;
 using ReceiptsRepository;
 using static TE4POS.MainWindow;
 using System.Diagnostics;
+using Microsoft.Win32;
 
 namespace TE4POS
 {
@@ -205,14 +206,33 @@ namespace TE4POS
             Directory.CreateDirectory(directory);
             File.WriteAllBytesAsync(filePath, pdfBytes);
         }
-    
-        public class Product
+
+        public void OpenReceiptFolderClick(object sender, RoutedEventArgs e)
         {
-            public int id { get; set; }
-            public string name { get; set; } = "";
-            public string category { get; set; } = "";
-            public int stock { get; set; }
-            public int price { get; set; }
+            string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory));
+            string directory = Path.Combine(projectRoot, "Pdfs");
+
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
+            // Open folder in Explorer
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = directory,
+                UseShellExecute = true,
+                Verb = "open"
+            });
+        }
+
+
+
+    public class Product
+    {
+        public int id { get; set; }
+        public string name { get; set; } = "";
+        public string category { get; set; } = "";
+        public int stock { get; set; }
+        public int price { get; set; }
 
             public string priceFormatted
             {
