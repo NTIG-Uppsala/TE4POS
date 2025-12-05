@@ -2,6 +2,7 @@
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Conditions;
 using FlaUI.UIA3;
+using System.Data.SQLite;
 
 namespace Tests
 {
@@ -219,6 +220,62 @@ namespace Tests
             }
             
             Assert.IsNull(errorPopup);
+        }
+
+        // Beginning of database tests
+        private static readonly string filePath = "Databases/TestDatabase.db";
+        private static readonly string connectionString = @"Data Source=" + filePath + ";Version=3";
+
+        [TestMethod]
+        public void ProductStockTicking()
+        {
+            var itemElement = window.FindFirstDescendant(cf.ByText("Varm choklad med grädde"));
+            var checkoutElement = window.FindFirstDescendant(cf.ByAutomationId("Finish"));
+            var itemBtn = itemElement.AsButton();
+            var checkoutBtn = checkoutElement.AsButton();
+
+            int itemsInStock = 0;
+
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT Stock FROM Products WHERE Name = 'Varm choklad med grädde'";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        itemsInStock = reader.GetInt32(reader.GetOrdinal("Stock"));
+                    }
+                }
+            }
+
+            Assert.AreEqual("100", itemsInStock.ToString());
+
+            for (int i = 0; i < 5; i++)
+            {
+                itemBtn.Click();
+            }
+
+            checkoutBtn.Click();
+
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT Stock FROM Products WHERE Name = 'Varm choklad med grädde'";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        itemsInStock = reader.GetInt32(reader.GetOrdinal("Stock"));
+                    }
+                }
+            }
+
+            Assert.AreEqual("95", itemsInStock.ToString());
         }
 
         [TestCleanup]
