@@ -4,6 +4,7 @@ using FlaUI.Core.Conditions;
 using FlaUI.UIA3;
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 
 namespace Tests
 {
@@ -35,6 +36,59 @@ namespace Tests
             var mainWindow = app.GetMainWindow(new UIA3Automation());
             window = (mainWindow != null) ? mainWindow : throw new Exception("mainWindow is not defined");
 
+        }
+
+        [TestMethod]
+        // Test to check if on test database and if test database is reset
+        public void FindTestObject()
+        {
+            var itemElement = window.FindFirstDescendant(cf.ByText("Testobject"));
+            var checkoutElement = window.FindFirstDescendant(cf.ByAutomationId("Finish"));
+            var itemBtn = itemElement.AsButton();
+            var checkoutBtn = checkoutElement.AsButton();
+
+            int itemsInStock = 0;
+
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT Stock FROM Products WHERE Name = 'Testobject'";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        itemsInStock = reader.GetInt32(reader.GetOrdinal("Stock"));
+                    }
+                }
+            }
+
+            Assert.AreEqual("100", itemsInStock.ToString());
+
+            for (int i = 0; i < 5; i++)
+            {
+                itemBtn.Click();
+            }
+
+            checkoutBtn.Click();
+
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT Stock FROM Products WHERE Name = 'Testobject'";
+
+                using (SQLiteCommand command = new SQLiteCommand(query, connection))
+                using (SQLiteDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        itemsInStock = reader.GetInt32(reader.GetOrdinal("Stock"));
+                    }
+                }
+            }
+
+            Assert.AreEqual("95", itemsInStock.ToString());
         }
 
         [TestMethod]
@@ -231,6 +285,79 @@ namespace Tests
         // Beginning of database tests
         private static readonly string filePath = "Databases/TestDatabase.db";
         private static readonly string connectionString = @"Data Source=" + filePath + ";Version=3";
+
+        [TestMethod]
+        public void CheckReceiptInDatabase()
+        {
+            var itemElement = window.FindFirstDescendant(cf.ByText("Testobject"));
+            var checkoutElement = window.FindFirstDescendant(cf.ByAutomationId("Finish"));
+            var itemBtn = itemElement.AsButton();
+            var checkoutBtn = checkoutElement.AsButton();
+            itemBtn.Click();
+            itemBtn.Click();
+            checkoutBtn.Click();
+
+            int receiptNumber = 0;
+            int articleCount = 0;
+            int receiptTotal = 0;
+            double subtotal = 0;
+            double saleTax = 0;
+            string pdfFormattedTime = "";
+            string time = "";
+            
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+                string query = "SELECT * FROM Receipts WHERE ReceiptNumber = @num";
+                using (var command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@num", 1);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            receiptNumber = reader.GetInt32(reader.GetOrdinal("ReceiptNumber"));
+                            articleCount = reader.GetInt32(reader.GetOrdinal("ArticleCount"));
+                            receiptTotal = reader.GetInt32(reader.GetOrdinal("ReceiptTotal"));
+                            subtotal = reader.GetDouble(reader.GetOrdinal("Subtotal"));
+                            saleTax = reader.GetDouble(reader.GetOrdinal("SaleTax"));
+                            pdfFormattedTime = reader.GetString(reader.GetOrdinal("PdfFormattedTime"));
+                            time = reader.GetString(reader.GetOrdinal("Time"));
+                        }
+                    }
+                }
+            }
+            
+            Assert.AreEqual(1, receiptNumber);
+            Assert.AreEqual(2, articleCount);
+            Assert.AreEqual(60, receiptTotal);
+            Assert.AreEqual(53.57, subtotal);
+            Assert.AreEqual(6.43, saleTax);
+            Assert.IsFalse(string.IsNullOrEmpty(pdfFormattedTime));
+            Assert.IsFalse(string.IsNullOrEmpty(time) );
+
+            System.Diagnostics.Debug.WriteLine("First time");
+            System.Diagnostics.Debug.WriteLine(saleTax);
+
+            app.Close();
+            
+            app = Application.Launch(appPath);
+            if (app == null)
+            {
+                throw new Exception("Application is not defined");
+            }
+
+            Assert.AreEqual(1, receiptNumber);
+            Assert.AreEqual(2, articleCount);
+            Assert.AreEqual(60, receiptTotal);
+            Assert.AreEqual(53.57, subtotal);
+            Assert.AreEqual(6.43, saleTax);
+            Assert.IsFalse(string.IsNullOrEmpty(pdfFormattedTime));
+            Assert.IsFalse(string.IsNullOrEmpty(time));
+
+            System.Diagnostics.Debug.WriteLine("Second time");
+            System.Diagnostics.Debug.WriteLine(saleTax);
+        }
 
         [TestMethod]
         public void ProductStockTicking()
