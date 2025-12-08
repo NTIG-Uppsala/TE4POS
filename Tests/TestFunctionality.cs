@@ -47,24 +47,24 @@ namespace Tests
             var itemBtn = itemElement.AsButton();
             var checkoutBtn = checkoutElement.AsButton();
 
-            int itemsInStock = 0;
+            int itemsSold = 0;
 
             using (var connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT Stock FROM Products WHERE Name = 'Testobject'";
+                string query = "SELECT Sold FROM Products WHERE Name = 'Testobject'";
 
                 using (SQLiteCommand command = new SQLiteCommand(query, connection))
                 using (SQLiteDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        itemsInStock = reader.GetInt32(reader.GetOrdinal("Stock"));
+                        itemsSold = reader.GetInt32(reader.GetOrdinal("Sold"));
                     }
                 }
             }
 
-            Assert.AreEqual("100", itemsInStock.ToString());
+            Assert.AreEqual("0", itemsSold.ToString());
 
             for (int i = 0; i < 5; i++)
             {
@@ -76,19 +76,19 @@ namespace Tests
             using (var connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT Stock FROM Products WHERE Name = 'Testobject'";
+                string query = "SELECT Sold FROM Products WHERE Name = 'Testobject'";
 
                 using (SQLiteCommand command = new SQLiteCommand(query, connection))
                 using (SQLiteDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        itemsInStock = reader.GetInt32(reader.GetOrdinal("Stock"));
+                        itemsSold = reader.GetInt32(reader.GetOrdinal("Sold"));
                     }
                 }
             }
 
-            Assert.AreEqual("95", itemsInStock.ToString());
+            Assert.AreEqual("5", itemsSold.ToString());
         }
 
         [TestMethod]
@@ -360,31 +360,31 @@ namespace Tests
         }
 
         [TestMethod]
-        public void ProductStockTicking()
+        public void ProductSoldTicking()
         {
             var itemElement = window.FindFirstDescendant(cf.ByText("Varm choklad med grädde"));
             var checkoutElement = window.FindFirstDescendant(cf.ByAutomationId("Finish"));
             var itemBtn = itemElement.AsButton();
             var checkoutBtn = checkoutElement.AsButton();
 
-            int itemsInStock = 0;
+            int itemsSold = 0;
 
             using (var connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT Stock FROM Products WHERE Name = 'Varm choklad med grädde'";
+                string query = "SELECT Sold FROM Products WHERE Name = 'Varm choklad med grädde'";
 
                 using (SQLiteCommand command = new SQLiteCommand(query, connection))
                 using (SQLiteDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        itemsInStock = reader.GetInt32(reader.GetOrdinal("Stock"));
+                        itemsSold = reader.GetInt32(reader.GetOrdinal("Sold"));
                     }
                 }
             }
 
-            Assert.AreEqual("100", itemsInStock.ToString());
+            Assert.AreEqual("0", itemsSold.ToString());
 
             for (int i = 0; i < 5; i++)
             {
@@ -396,19 +396,19 @@ namespace Tests
             using (var connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
-                string query = "SELECT Stock FROM Products WHERE Name = 'Varm choklad med grädde'";
+                string query = "SELECT Sold FROM Products WHERE Name = 'Varm choklad med grädde'";
 
                 using (SQLiteCommand command = new SQLiteCommand(query, connection))
                 using (SQLiteDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        itemsInStock = reader.GetInt32(reader.GetOrdinal("Stock"));
+                        itemsSold = reader.GetInt32(reader.GetOrdinal("Sold"));
                     }
                 }
             }
 
-            Assert.AreEqual("95", itemsInStock.ToString());
+            Assert.AreEqual("5", itemsSold.ToString());
         }
 
         [TestCleanup]

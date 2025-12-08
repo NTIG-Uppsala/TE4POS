@@ -51,7 +51,7 @@ namespace ProductsRepository
                             name = reader.GetString(reader.GetOrdinal("Name")),
                             price = reader.GetInt32(reader.GetOrdinal("Price")),
                             category = reader.GetString(reader.GetOrdinal("Category")),
-                            stock = reader.GetInt32(reader.GetOrdinal("Stock")),
+                            sold = reader.GetInt32(reader.GetOrdinal("Sold")),
                         });
                     }
                 }

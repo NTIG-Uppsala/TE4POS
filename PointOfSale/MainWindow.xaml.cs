@@ -150,8 +150,8 @@ namespace TE4POS
                 // Adds the receipt to the receipt list
                 ReceiptList.Add(currentReceipt);
 
-                // Updates the stock in the database
-                DatabaseHelper.RemoveStock(ShoppingCart);
+                // Updates the amount sold in the database
+                DatabaseHelper.AddSold(ShoppingCart);
 
                 // Clears cart and cart price total for next order
                 ShoppingCart.Clear();
@@ -250,7 +250,7 @@ namespace TE4POS
         public int id { get; set; }
         public string name { get; set; } = "";
         public string category { get; set; } = "";
-        public int stock { get; set; }
+        public int sold { get; set; }
         public int price { get; set; }
 
             public string priceFormatted
