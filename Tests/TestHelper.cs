@@ -68,6 +68,7 @@ namespace Tests
             // Inserts test data into the Products table
             var products = new[]
             {
+                new { Name = "Testobject", Price = 30, Category = "Varma drycker", Stock = 100 },
                 new { Name = "Bryggkaffe (liten)", Price = 28, Category = "Varma drycker", Stock = 100 },
                 new { Name = "Bryggkaffe (stor)", Price = 34, Category = "Varma drycker", Stock = 100 },
                 new { Name = "Cappuccino", Price = 42, Category = "Varma drycker", Stock = 100 },
