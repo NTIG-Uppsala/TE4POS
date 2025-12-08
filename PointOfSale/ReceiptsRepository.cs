@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using static TE4POS.MainWindow;
+using TE4POS;
 
 namespace ReceiptsRepository
 {
@@ -17,11 +18,24 @@ namespace ReceiptsRepository
         private static readonly string filePath = "Databases/Database.db";
         private static readonly string connectionString = @"Data Source=" + filePath + ";Version=3";
 
+        private static readonly string testFilePath = "Databases/TestDatabase.db";
+        private static readonly string testConnectionString = @"Data Source=" + testFilePath + ";Version=3";
+
+        private static string currentConnectionString = "";
+
         public IEnumerable<Receipt> GetAllReceipts()
         {
+            if (App.isTest)
+            {
+                currentConnectionString = testConnectionString;
+            }
+            else
+            {
+                currentConnectionString = connectionString;
+            }
             AllReceipts.Clear(); // important might cause duplication otherwise
 
-            using (var connection = new SQLiteConnection(connectionString))
+            using (var connection = new SQLiteConnection(currentConnectionString))
             {
                 connection.Open();
                 string receiptsQuery = "SELECT * FROM Receipts";
