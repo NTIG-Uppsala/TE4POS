@@ -11,14 +11,15 @@ using System.Windows;
 using System.Windows.Controls;
 using ProductsRepository;
 using ReceiptsRepository;
+using CategoriesRepository;
 using static TE4POS.MainWindow;
 using System.Diagnostics;
-using Microsoft.Win32;
 
 namespace TE4POS
 {
     public partial class MainWindow : Window
     {
+        private SQLiteCategoiesRepository categoriesRepo = new SQLiteCategoiesRepository();
         private SQLiteProductsRepository productsRepo = new SQLiteProductsRepository();
         private SQLiteReceiptsRepository receiptsRepo = new SQLiteReceiptsRepository();
 
@@ -27,6 +28,9 @@ namespace TE4POS
 
         // A list of all receipts 
         public ObservableCollection<Receipt> ReceiptList { get; set; }
+
+        // A list of all product categories
+        public ObservableCollection<Category> AllCategories { get; set; }
 
         // A list of all products added to the cart
         public ObservableCollection<CartItem> ShoppingCart { get; set; }
@@ -51,10 +55,12 @@ namespace TE4POS
             // Loads data from the database
             productsRepo.GetAllProducts();
             receiptsRepo.GetAllReceipts();
+            categoriesRepo.GetAllCategories();
 
             // bind to the ObservableCollection
             AllProducts = productsRepo.AllProducts;
             ReceiptList = receiptsRepo.AllReceipts;
+            AllCategories = categoriesRepo.AllCategories;
 
             // An empty cart
             ShoppingCart = new ObservableCollection<CartItem> { };
@@ -249,30 +255,30 @@ namespace TE4POS
     {
         public int id { get; set; }
         public string name { get; set; } = "";
-        public string category { get; set; } = "";
+        public int category { get; set; }
         public int sold { get; set; }
         public int price { get; set; }
 
-            public string priceFormatted
+        public string priceFormatted
+        {
+            get
             {
-                get
-                {
-                    return string.Format("{0:F}", price);
-                }
-            }
-            // Parameterless constructor for derived classes
-            public Product()
-            {
-
-            }
-        
-            public Product(string productName, string productCategory, int productPrice)
-            {
-                name = productName;
-                category = productCategory;
-                price = productPrice;
+                return string.Format("{0:F}", price);
             }
         }
+        // Parameterless constructor for derived classes
+        public Product()
+        {
+
+        }
+        
+        public Product(string productName, int productCategory, int productPrice)
+        {
+            name = productName;
+            category = productCategory;
+            price = productPrice;
+        }
+    }
     
         public class CartItem : Product, INotifyPropertyChanged
         {
@@ -350,6 +356,13 @@ namespace TE4POS
                 }
             }
         }
+    }
+
+    public class Category
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        
     }
 
     public class ReceiptPdf : IDocument

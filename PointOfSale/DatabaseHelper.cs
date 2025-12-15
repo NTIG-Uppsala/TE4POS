@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.IO;
-using System.Threading.Tasks;
 using static TE4POS.MainWindow;
 
 namespace TE4POS
@@ -52,7 +51,7 @@ namespace TE4POS
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         Name TEXT NOT NULL,
                         Price INTEGER NOT NULL,
-                        Category TEXT NOT NULL,
+                        Category INTEGER NOT NULL,
                         Sold INTEGER NOT NULL
                     )";
 
@@ -110,24 +109,22 @@ namespace TE4POS
         {
             var Categories = new[]
             {
-                new{Id = 1, CategoryName = "Varma drycker"},
-                new{Id = 2, CategoryName = "Kalla drycker"},
-                new{Id = 3, CategoryName = "Bakverk"},
-                new{Id = 4, CategoryName = "Enkel mat"}
+                new { CategoryName = "Varma drycker"},
+                new { CategoryName = "Kalla drycker"},
+                new { CategoryName = "Bakverk"},
+                new { CategoryName = "Enkel mat" }
             };
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
                 connection.Open();
                 using (var tx = connection.BeginTransaction())
-                using (var cmd = new SQLiteCommand(@"INSERT INTO ProductCategories (Id, CategoryName) 
-                                           VALUES (@id, @category)", connection, tx))
+                using (var cmd = new SQLiteCommand(@"INSERT INTO ProductCategories (CategoryName) 
+                                           VALUES (@category)", connection, tx))
                 {
-                    cmd.Parameters.Add(new SQLiteParameter("@id"));
                     cmd.Parameters.Add(new SQLiteParameter("@category"));
 
                     foreach (var category in Categories)
                     {
-                        cmd.Parameters["@id"].Value = category.Id;
                         cmd.Parameters["@category"].Value = category.CategoryName;
                         cmd.ExecuteNonQuery();
                     }
@@ -141,32 +138,32 @@ namespace TE4POS
         {
             var products = new[]
             {
-                new { Name = "Bryggkaffe (liten)", Price = 28, Category = "1", Sold = 0 },
-                new { Name = "Bryggkaffe (stor)", Price = 34, Category = "1", Sold = 0 },
-                new { Name = "Cappuccino", Price = 42, Category = "1", Sold = 0 },
-                new { Name = "Latte", Price = 46, Category = "1", Sold = 0 },
-                new { Name = "Varm choklad med grädde", Price = 45, Category = "1", Sold = 0 },
-                new { Name = "Te (svart, grönt eller örtte)", Price = 32, Category = "1", Sold = 0 },
+                new { Name = "Bryggkaffe (liten)", Price = 28, Category = 1, Sold = 0 },
+                new { Name = "Bryggkaffe (stor)", Price = 34, Category = 1, Sold = 0 },
+                new { Name = "Cappuccino", Price = 42, Category = 1, Sold = 0 },
+                new { Name = "Latte", Price = 46, Category = 1, Sold = 0 },
+                new { Name = "Varm choklad med grädde", Price = 45, Category = 1, Sold = 0 },
+                new { Name = "Te (svart, grönt eller örtte)", Price = 32, Category = 1, Sold = 0 },
 
-                new { Name = "Islatte", Price = 48, Category = "2", Sold = 0 },
-                new { Name = "Ischai", Price = 46, Category = "2", Sold = 0 },
-                new { Name = "Läsk (33 cl)", Price = 22, Category = "2", Sold = 0 },
-                new { Name = "Mineralvatten", Price = 20, Category = "2", Sold = 0 },
-                new { Name = "Smoothie (jordgubb & banan)", Price = 55, Category = "2", Sold = 0 },
-                new { Name = "Färskpressad apelsinjuice", Price = 49, Category = "2", Sold = 0 },
+                new { Name = "Islatte", Price = 48, Category = 2, Sold = 0 },
+                new { Name = "Ischai", Price = 46, Category = 2, Sold = 0 },
+                new { Name = "Läsk (33 cl)", Price = 22, Category = 2, Sold = 0 },
+                new { Name = "Mineralvatten", Price = 20, Category = 2, Sold = 0 },
+                new { Name = "Smoothie (jordgubb & banan)", Price = 55, Category = 2, Sold = 0 },
+                new { Name = "Färskpressad apelsinjuice", Price = 49, Category = 2, Sold = 0 },
 
-                new { Name = "Kanelbulle", Price = 25, Category = "3", Sold = 0 },
-                new { Name = "Chokladboll", Price = 18, Category = "3", Sold = 0 },
-                new { Name = "Morotskaka (bit)", Price = 38, Category = "3", Sold = 0 },
-                new { Name = "Cheesecake (bit)", Price = 42, Category = "3", Sold = 0 },
-                new { Name = "Croissant", Price = 26, Category = "3", Sold = 0 },
-                new { Name = "Muffins (blåbär)", Price = 28, Category = "3", Sold = 0 },
+                new { Name = "Kanelbulle", Price = 25, Category = 3, Sold = 0 },
+                new { Name = "Chokladboll", Price = 18, Category = 3, Sold = 0 },
+                new { Name = "Morotskaka (bit)", Price = 38, Category = 3, Sold = 0 },
+                new { Name = "Cheesecake (bit)", Price = 42, Category = 3, Sold = 0 },
+                new { Name = "Croissant", Price = 26, Category = 3, Sold = 0 },
+                new { Name = "Muffins (blåbär)", Price = 28, Category = 3, Sold = 0 },
 
-                new { Name = "Smörgås (ost & skinka)", Price = 38, Category = "4", Sold = 0 },
-                new { Name = "Räksmörgås", Price = 69, Category = "4", Sold = 0 },
-                new { Name = "Panini (kyckling & pesto)", Price = 58, Category = "4", Sold = 0 },
-                new { Name = "Soppa med bröd", Price = 65, Category = "4", Sold = 0 },
-                new { Name = "Quinoasallad", Price = 72, Category = "4", Sold = 0 },
+                new { Name = "Smörgås (ost & skinka)", Price = 38, Category = 4, Sold = 0 },
+                new { Name = "Räksmörgås", Price = 69, Category = 4, Sold = 0 },
+                new { Name = "Panini (kyckling & pesto)", Price = 58, Category = 4, Sold = 0 },
+                new { Name = "Soppa med bröd", Price = 65, Category = 4, Sold = 0 },
+                new { Name = "Quinoasallad", Price = 72, Category = 4, Sold = 0 },
             };
 
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
@@ -185,32 +182,12 @@ namespace TE4POS
                     {
                         cmd.Parameters["@name"].Value = product.Name;
                         cmd.Parameters["@price"].Value = product.Price;
-                        cmd.Parameters["@category"].Value = GetProductCategory(product.Category);
+                        cmd.Parameters["@category"].Value = product.Category;
                         cmd.Parameters["@sold"].Value = product.Sold;
                         cmd.ExecuteNonQuery();
                     }
 
                     tx.Commit();
-                }
-            }
-        }
-
-        public static string GetProductCategory(string productCategoryId)
-        {
-            using (SQLiteConnection connection = new SQLiteConnection(GetConnectionString()))
-            {
-                connection.Open();
-                string selectCategoryQuery = $"SELECT CategoryName FROM ProductCategories WHERE Id = '{int.Parse(productCategoryId)}'";
-                using (var cmd = new SQLiteCommand(selectCategoryQuery, connection))
-                using (SQLiteDataReader reader = cmd.ExecuteReader())
-                {
-                    string category = "";
-                    while (reader.Read())
-                    {
-                        category = reader.GetString(reader.GetOrdinal("CategoryName"));
-                        System.Diagnostics.Debug.WriteLine("Log: " + category);
-                    }
-                    return category;
                 }
             }
         }

@@ -13,16 +13,16 @@
     <Window.Resources>
         <Style TargetType="Button">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding category}" Value="Varma drycker">
+                <DataTrigger Binding="{Binding category}" Value="1">
                     <Setter Property="Background" Value="Orange"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding category}" Value="Kalla drycker">
+                <DataTrigger Binding="{Binding category}" Value="2">
                     <Setter Property="Background" Value="Cyan"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding category}" Value="Bakverk">
+                <DataTrigger Binding="{Binding category}" Value="3">
                     <Setter Property="Background" Value="Chartreuse"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding category}" Value="Enkel mat">
+                <DataTrigger Binding="{Binding category}" Value="4">
                     <Setter Property="Background" Value="Lavender"/>
                 </DataTrigger>
             </Style.Triggers>
