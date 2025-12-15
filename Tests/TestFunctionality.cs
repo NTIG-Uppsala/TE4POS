@@ -4,7 +4,6 @@ using FlaUI.Core.Conditions;
 using FlaUI.UIA3;
 using System.Data.SQLite;
 using System.Diagnostics;
-using System.Runtime.ExceptionServices;
 
 namespace Tests
 {

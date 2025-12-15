@@ -50,7 +50,7 @@ namespace ProductsRepository
                             id = reader.GetInt32(reader.GetOrdinal("Id")),
                             name = reader.GetString(reader.GetOrdinal("Name")),
                             price = reader.GetInt32(reader.GetOrdinal("Price")),
-                            category = reader.GetString(reader.GetOrdinal("Category")),
+                            category = reader.GetInt32(reader.GetOrdinal("Category")),
                             sold = reader.GetInt32(reader.GetOrdinal("Sold")),
                         });
                     }
