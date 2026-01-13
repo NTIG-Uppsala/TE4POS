@@ -162,6 +162,52 @@
                     <Grid x:Name="ShowReceipt" VerticalAlignment="Top" Grid.RowSpan="2" Grid.Column="2"/>
                 </Grid>
             </TabItem>
+
+            <TabItem Header="Lager">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="300"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" FontSize="14" Text="Produktnamn"/>
+                        <TextBlock Grid.Column="1" FontSize="14" Text="Sålt"/>
+                        <TextBlock Grid.Column="2" FontSize="14" Text="I Lager"/>
+                    </Grid>
+                    <Line Stretch="Fill" Stroke="Black" X2="1" Grid.Row="1"/>
+                    <ScrollViewer Grid.Row="2" HorizontalAlignment="Left" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                        <ItemsControl ItemsSource="{Binding AllProducts}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="300"/>
+                                            <ColumnDefinition Width="100"/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" FontSize="14" Text="{Binding name}"/>
+                                        <TextBlock Grid.Column="1" FontSize="14" Text="{Binding sold}"/>
+                                        <TextBlock Grid.Column="2" FontSize="14" Text=""/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>
