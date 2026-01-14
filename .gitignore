@@ -12,8 +12,8 @@
 # Pdf Folder 
 Pdfs/
 
-# Installatiion folder
-CaféBullenPOSInstall/
+# Installation folder
+CaféBullen/
 
 PointOfSale/Databases/*
 !PointOfSale/Databases/.gitkeep
